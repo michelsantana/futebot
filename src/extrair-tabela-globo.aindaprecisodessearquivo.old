@@ -1,0 +1,319 @@
+const pptr = require('puppeteer');
+const jimp = require('jimp');
+const cheerio = require('cheerio');
+const replaceColor = require('replace-color');
+const moment = require('moment');
+const utils = require('./utils');
+
+const caminhoPastaRaizArquivos = './archive/'
+const nomeDoPrint = 'screenshot.png';
+const nomeDoJson = 'classificacao.json';
+
+const url = 'https://ge.globo.com/futebol/brasileirao-serie-a/';
+
+const obterPasta = () => {
+    const hoje = moment().format('yyyyMMDD');
+    return `${caminhoPastaRaizArquivos}${hoje}`;
+}
+
+const obterCaminhoPrint = () => {
+    return `${obterPasta()}${nomeDoPrint}`;
+}
+const obterCaminhoJson = () => {
+    return `${obterPasta()}${nomeDoJson}`;
+}
+
+const abrirBrowser = async () => {
+    const browser = await pptr.launch({ headless: false });
+    const page = await browser.newPage();
+    page.setViewport({ width: 1550, height: 5000 });
+    return { browser, page };
+}
+
+const fecharBrowser = async (browser) => {
+    browser.close();
+}
+
+const abrirPagina = async (page) => {
+    try { await page.goto(url, { waitUntil: 'networkidle2' }); }
+    catch (e) { await page.goto(url, { waitUntil: 'networkidle2' }); }
+}
+
+const esperarCarregar = async (page) => {
+    await page.waitForSelector('.tabela__futebol');
+    await utils.sleep(1);
+}
+
+const extrairDadosJson = async (page) => {
+    const html = await page.evaluate(() => window.$('.tabela__futebol').html());
+    const $ = cheerio.load(html);
+
+    const linhasTabelaEquipe = await $('table').eq(0).find('tbody tr').get();
+    const linhasTabelaPontos = await $('table').eq(1).find('tbody tr').get();
+    const colunasEquipe = {
+        classificacao: 0,
+        time: 1,
+        variacao: 2
+    };
+    const colunasPontos = {
+        pontos: 0,
+        jogos: 1,
+        vitorias: 2,
+        empates: 3,
+        derrotas: 4,
+        golPro: 5,
+        golContra: 6,
+        saldoGols: 7,
+        percentual: 8,
+        ultimosJogos: 9,
+    }
+
+    const resultado = [];
+    const objetoTabela = function (
+        classificacao,
+        sigla,
+        time,
+        variacao,
+        pontos,
+        jogos,
+        vitorias,
+        empates,
+        derrotas,
+        golPro,
+        golContra,
+        saldoGols,
+        percentual,
+        ultimosJogos
+    ) {
+        this.classificacao = classificacao;
+        this.time = time;
+        this.sigla = sigla;
+        this.variacao = variacao;
+        this.pontos = pontos;
+        this.jogos = jogos;
+        this.vitorias = vitorias;
+        this.empates = empates;
+        this.derrotas = derrotas;
+        this.golPro = golPro;
+        this.golContra = golContra;
+        this.saldoGols = saldoGols;
+        this.percentual = percentual;
+        this.ultimosJogo = ultimosJogos;
+        return this;
+    }
+
+    const extrairTime = (el) => {
+        const td = $(el).find('td').eq(colunasEquipe.time);
+
+        const nmTime = td.find('strong').text();
+        const siglaTime = td.find('span').text();
+
+        return [`${nmTime}`, `${siglaTime}`];
+    }
+
+    const extrairVariacao = (el) => {
+        const td = $(el).find('td').eq(colunasEquipe.variacao);
+        const valorVariacao = ~~td.text();
+        if (td.find('.classificacao__icone--negativa').length > 0)
+            return -valorVariacao;
+        return valorVariacao;
+    }
+
+    const extrairHistorico = (el) => {
+        const historico = [];
+        const td = $(el).find('td').eq(colunasPontos.ultimosJogos);
+        td.find('span').get().forEach((e) => {
+            if ($(e).is('.classificacao__ultimos_jogos--v')) historico.push('vitória');
+            if ($(e).is('.classificacao__ultimos_jogos--e')) historico.push('empate');
+            if ($(e).is('.classificacao__ultimos_jogos--d')) historico.push('derrota');
+        });
+        return historico;
+    }
+
+    for (const tr in linhasTabelaEquipe) {
+        const linhaEquipe = linhasTabelaEquipe[tr];
+        const linhaPontos = linhasTabelaPontos[tr];
+        const time = extrairTime(linhaEquipe);
+        resultado.push(new objetoTabela(
+            $(linhaEquipe).find('td').eq(colunasEquipe.classificacao).text(),
+            time[0],
+            time[1],
+            extrairVariacao(linhaEquipe),
+            $(linhaPontos).find('td').eq(colunasPontos.pontos).text(),
+            $(linhaPontos).find('td').eq(colunasPontos.jogos).text(),
+            $(linhaPontos).find('td').eq(colunasPontos.vitorias).text(),
+            $(linhaPontos).find('td').eq(colunasPontos.empates).text(),
+            $(linhaPontos).find('td').eq(colunasPontos.derrotas).text(),
+            $(linhaPontos).find('td').eq(colunasPontos.golPro).text(),
+            $(linhaPontos).find('td').eq(colunasPontos.golContra).text(),
+            $(linhaPontos).find('td').eq(colunasPontos.saldoGols).text(),
+            $(linhaPontos).find('td').eq(colunasPontos.percentual).text(),
+            extrairHistorico(linhaPontos)
+        ));
+    }
+
+    return resultado;
+}
+
+const aplicarModificacoesDeEstilo = async (page) => {
+    // classificacao__equipes--posicao -> font-weight: 900
+    let tableColor = '#1f1f1f';
+
+    await page.evaluate(() => window.$('.classificacao__equipes--posicao').css('font-weight', '900'));
+
+    await page.evaluate((tbColor) => {
+        const style = `
+            .tabela__futebol table {
+                overflow: hidden !important;  
+            }
+            .tabela__futebol {
+                overflow: hidden !important;  
+                background: ${tbColor} !important;
+                color: white;   
+                padding: 0 !important;
+                magin: 0 !important; 
+            } 
+            .tabela__futebol header h2 {
+                color: white !important;   
+                display: none
+            ;}
+            .tabela__futebol tr, 
+            .tabela__futebol td {
+                background: ${tbColor} !important;
+                color: white;   
+                padding: 0 !important;
+                magin: 0 !important;
+                height: 30px
+            }
+            
+            .tabela__futebol {
+                padding: 15px !important;
+                width: 820px
+            }
+
+            .regulamento__ver-regulamento{
+                display:none;
+            }
+            `;
+        window.$('body').append(`<style>${style}</style>`);
+    }, tableColor);
+    await utils.sleep(1);
+}
+
+const tirarPrint = async (page) => {
+    await page.screenshot({ path: caminhoDoArquivo });
+}
+
+const cortarImagem = async (page, caminhoDoArquivo, tamanhoDaMargemDoCorte) => {
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const card = (await page.$('.tabela__futebol'));
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const dimensoes = await card.boundingBox();
+
+
+    utils.cortarImagem(caminhoDoArquivo, dimensoes, tamanhoDaMargemDoCorte);
+
+}
+
+const replaceColors = async (caminhoDoArquivo) => {
+    let img = await jimp.read(caminhoDoArquivo);
+    img = await img.write(caminhoDoArquivo);
+
+    const replace = async (target, replace, delta) => {
+        let _ = await replaceColor({
+            image: caminhoDoArquivo,
+            colors: {
+                type: 'hex',
+                targetColor: target,
+                replaceColor: replace
+            },
+            deltaE: delta
+        });
+        _ = await _.write(caminhoDoArquivo);
+        return _;
+    }
+
+    img = await replace('#0000ff', '#9a25f3', 10);
+    img = await replace('#008000', '#007a80', 5);
+}
+
+const ExecutarTudo = async () => {
+
+    const tamanhoDaMargemDoCorte = 0;
+    utils.criarPastaSeNaoExistir(obterPasta());
+
+    const result = {
+        imgens: caminhoDoArquivo,
+        arquivoJson: null,
+        json: null
+    }
+
+    const navegador = await abrirBrowser();
+    await abrirPagina(navegador.page);
+    await esperarCarregar(navegador.page);
+
+    result.json = await extrairDadosJson(navegador.page);
+    utils.escreverArquivo(arquivoJson, result.json);
+
+    await aplicarModificacoesDeEstilo(navegador.page);
+    await tirarPrint(navegador.page);
+    await cortarImagem(navegador.page, caminhoDoArquivo, tamanhoDaMargemDoCorte);
+    await replaceColors(caminhoDoArquivo);
+    await fecharBrowser(navegador.browser);
+
+    return result;
+}
+
+const TirarPrint = async () => {
+
+    const tamanhoDaMargemDoCorte = 0;
+
+    let caminhoDoArquivo = `${obterPasta()}`;
+    utils.criarPastaSeNaoExistir(caminhoDoArquivo);
+    caminhoDoArquivo += `screenshot.png`;
+
+    const result = {
+        arquivoGerado: caminhoDoArquivo,
+    }
+
+    const navegador = await abrirBrowser();
+    await abrirPagina(navegador.page);
+    await esperarCarregar(navegador.page);
+    await aplicarModificacoesDeEstilo(navegador.page);
+    await tirarPrint(navegador.page);
+    await cortarImagem(navegador.page, caminhoDoArquivo, tamanhoDaMargemDoCorte);
+    await replaceColors(caminhoDoArquivo);
+    await fecharBrowser(navegador.browser);
+
+    return result;
+}
+
+const ExtrairJson = async () => {
+
+    const tamanhoDaMargemDoCorte = 0;
+
+    let arquivoJson = `${obterPasta()}`;
+    utils.criarPastaSeNaoExistir(arquivoJson);
+    arquivoJson += `classificacao.json`;
+    const result = {
+        arquivoGerado: null,
+        arquivoJson: null,
+        json: null
+    }
+    const navegador = await abrirBrowser();
+    await abrirPagina(navegador.page);
+    await esperarCarregar(navegador.page);
+    result.json = await extrairDadosJson(navegador.page);
+    utils.escreverArquivo(arquivoJson, result.json);
+    await fecharBrowser(navegador.browser);
+    return result;
+
+}
+
+module.exports = {
+    ExecutarTudo,
+    ExtrairJson,
+    TirarPrint
+}
