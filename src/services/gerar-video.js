@@ -1,33 +1,9 @@
 const fs = require('fs');
-const moment = require('moment');
-const videoshow = require('../lib/videoshow');
+const videoshow = require('../../lib/videoshow');
 const mp3Duration = require('mp3-duration');
+const pastas = require('./../gerenciador-pastas');
 
-
-const caminhoPastaSaidaDosArquivos = process.env.caminhoPastaSaidaDosArquivos || './archive/'
-const nomArquivoVideo = 'video.mp4';
-
-const obterPasta = () => {
-    const hoje = moment().format('yyyyMMDD');
-    return `${caminhoPastaSaidaDosArquivos}${hoje}`;
-}
-
-const obterArquivoVideo = () => {
-    const hoje = moment().format('yyyyMMDD');
-    return `${caminhoPastaSaidaDosArquivos}${hoje}/${nomArquivoVideo}`;
-}
-
-// const videoOptions = {
-//     fps: 25,
-//     loop: 5, // seconds
-//     transition: true,
-//     transitionDuration: 1, // seconds
-//     videoBitrate: 1024,
-//     videoCodec: 'libx264',
-//     //size: '640x?',
-//     size: '1080x?',
-//     format: 'mp4',
-// }
+const obterArquivoVideo = () => `${pastas.obterPastaArquivosDoDia()}/video.mp4`;
 
 var videoOptions = {
     loop: 5,

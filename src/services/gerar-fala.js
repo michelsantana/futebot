@@ -1,46 +1,33 @@
 const fs = require('fs');
 const path = require('path');
-const moment = require('moment');
 const pptr = require('puppeteer');
-const utils = require('./utils');
-require('dotenv').config();
+const moment = require('moment');
+const utils = require('./../utils');
+const pastas = require('./../gerenciador-pastas');
 
-const caminhoPastaDownloadPadraoChromium = process.env.caminhoPastaDownloadPadraoChromium || '%USERPROFILE%/Downloads/';
-
-const caminhoPastaSaidaDosArquivos = process.env.caminhoPastaSaidaDosArquivos || './archive/'
-
-const obterPasta = () => {
-    const hoje = moment().format('yyyyMMDD');
-    return `${caminhoPastaSaidaDosArquivos}${hoje}/`;
-}
-
-const obterNomeArquivoAudioSemExtensao = () => {
-    const hoje = moment().format('yyyyMMDD');
-    return `IBM_AUDIO_${hoje}`;
-}
-
+const obterNomeArquivoAudioSemExtensao = () => `IBM_AUDIO_${moment().format('yyyyMMDD')}`;
 const obterNomeArquivoAudio = () => `${obterNomeArquivoAudioSemExtensao()}.mp3`;
-
-const obterCaminhoArquivoAudio = () => `${obterPasta()}${obterNomeArquivoAudio()}`;
+const obterArquivoDeAudio = () => `${pastas.obterPastaArquivosDoDia()}/${obterNomeArquivoAudio()}`;
+const obterArquivoDeAudioBaixado = () => `${pastas.obterPastaDownloadsChrome()}/${obterNomeArquivoAudio()}`;
+const obterPastaDeDownloads = () => pastas.obterPastaDownloadsChrome();
+const obterArquivoDiscurso = () => `${pastas.obterPastaArquivosDoDia()}/discurso.txt`;
 
 async function EsperarfinalizacaoDownload() {
 
-    await utils.sleep(10);
+    await utils.sleep(1);
     const quantidadeTentativasMaxima = 10;
     let result = false;
     let tentativaAtual = 1;
     while (tentativaAtual++ < quantidadeTentativasMaxima) {
-        let arquivos = fs.readdirSync(caminhoPastaDownloadPadraoChromium);
+        let arquivos = fs.readdirSync(obterPastaDeDownloads());
 
         try {
             for (var a of arquivos) {
-                if (a == obterNomeArquivoAudio() || a == obterNomeArquivoAudioSemExtensao()) {
-                    if (path.extname(a) == '.mp3' || path.extname(a) == 'mp3') {
-                        tentativaAtual = 99;
-                        result = true;
-                        fs.copyFileSync(`${caminhoPastaDownloadPadraoChromium}${a}`, `${obterCaminhoArquivoAudio()}`);
-                        break;
-                    }
+                if (a == obterNomeArquivoAudio()) {
+                    tentativaAtual = 99;
+                    result = true;
+                    fs.copyFileSync(`${obterArquivoDeAudioBaixado()}`, `${obterArquivoDeAudio()}`);
+                    break;
                 }
             }
         } catch (e) {
@@ -49,11 +36,19 @@ async function EsperarfinalizacaoDownload() {
         if (result) break;
         await utils.sleep(tentativaAtual);
     }
+
     return result;
 }
 
 async function GerarFala(arquivoDadosTabela) {
-    //const browser = await pptr.launch({ });
+    
+    if(fs.existsSync(obterArquivoDeAudio())) return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: true }
+    
+    if(fs.existsSync(obterArquivoDeAudioBaixado())) {
+        await EsperarfinalizacaoDownload();
+        return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: true }
+    }
+
     const scriptFala = await GerarTexto(arquivoDadosTabela);
 
     const browser = await pptr.launch({
@@ -99,7 +94,7 @@ async function GerarFala(arquivoDadosTabela) {
             document.body.append(link);
         }
 
-        audio.onended = function(){
+        audio.onended = function () {
             let link = document.createElement('a');
             link.innerHTML = 'IndicadorDeFinalização';
             link.setAttribute(`href`, '#');
@@ -122,7 +117,7 @@ async function GerarFala(arquivoDadosTabela) {
     await page.close();
     await browser.close();
 
-    return { arquivoAudio: `${obterPasta()}${obterNomeArquivoAudio()}`, arquivoBaixado: obterCaminhoArquivoAudio(), arquivoGerado: downloadConcluidoComSucesso }
+    return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: downloadConcluidoComSucesso }
 }
 
 async function GerarTexto(arquivo) {
@@ -175,12 +170,9 @@ async function GerarTexto(arquivo) {
 
     add('Gostaria de agradecer a todos que assistiram até aqui: Muitíssimo obrigado: tenham uma ótima semana:');
     const mensagemResolvida = mensagem.join('');
-    fs.writeFileSync(`${obterPasta()}texto.txt`, mensagemResolvida);
+    fs.writeFileSync(`${obterArquivoDiscurso()}`, mensagemResolvida);
     return mensagemResolvida;
 }
-
-//console.log(await GerarTexto(`./archive/20210618/20210618080330.json`));
-//await GerarFala(`./archive/20210618/20210618080330.json`)
 
 async function Executar(arquivoJson) {
     return await GerarFala(arquivoJson);

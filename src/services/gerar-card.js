@@ -1,24 +1,13 @@
 const jimp = require('jimp');
-const utils = require('./utils');
-const moment = require('moment');
+const utils = require('./../utils');
+const pastas = require('./../gerenciador-pastas');
 
-const caminhoPastaSaidaDosArquivos = process.env.caminhoPastaSaidaDosArquivos || './archive/'
-const caminhoPastaRecursos = './resources/';
-const nomePastaPlanosDeFundo = `planosdefundo/`;
 const nomeArquivoPostagem = `post.png`;
-
-const obterPasta = () => `${caminhoPastaSaidaDosArquivos}${moment().format('yyyyMMDD')}/`;
-
-const obterPastaRecursos = () => caminhoPastaRecursos;
-
-const obterArquivoPlanosDeFundoAleatorio = () => `${obterPastaRecursos()}/${nomePastaPlanosDeFundo}/${utils.aleatorio(1,7)}.png`;
-const obterArquivoLogo = () => `${obterPastaRecursos()}/logo-1.png`;
-const obterArquivoPostagem = () => `${obterPasta()}${nomeArquivoPostagem}`;
-
+const obterArquivoPlanosDeFundoAleatorio = () => `${pastas.obterPastaDeRecursos()}/bg-${utils.aleatorio(1,7)}.png`;
+const obterArquivoLogo = () => `${pastas.obterPastaDeRecursos()}/logo-1.png`;
+const obterArquivoPostagem = () => `${pastas.obterPastaArquivosDoDia()}${nomeArquivoPostagem}`;
 
 async function GerarTabela({ cabecalho, corpo1, corpo2, rodape }) {
-
-    utils.criarPastaSeNaoExistir(obterPasta());
 
     const imgCabecalho = await jimp.read(cabecalho);
     const imgcorpo1 = await jimp.read(corpo1);
@@ -73,8 +62,6 @@ const GerarMarcaDagua = async (width, height) => {
 }
 
 async function GerarPlanoDeFundo() {
-
-    utils.criarPastaSeNaoExistir(obterPasta());
 
     const width = 1920;
     const height = 1080;

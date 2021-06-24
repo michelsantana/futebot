@@ -1,16 +1,12 @@
 const pptr = require('puppeteer');
 const cheerio = require('cheerio');
-const moment = require('moment');
-const utils = require('./utils');
-require('dotenv').config();
+const utils = require('./../utils');
+const pastas = require('./../gerenciador-pastas');
 
-const caminhoPastaSaidaDosArquivos = process.env.caminhoPastaSaidaDosArquivos || './archive/'
 const nomeDoJson = 'classificacao.json';
 const url = 'https://ge.globo.com/futebol/brasileirao-serie-a/';
 
-const obterPasta = () => `${caminhoPastaSaidaDosArquivos}${moment().format('yyyyMMDD')}/`;
-
-const obterCaminhoJson = () => `${obterPasta()}${nomeDoJson}`;
+const obterArquivoJson = () => `${pastas.obterPastaArquivosDoDia()}${nomeDoJson}`;
 
 async function Executar() {
 
@@ -139,17 +135,15 @@ async function Executar() {
         return resultado;
     }
 
-    utils.criarPastaSeNaoExistir(obterPasta());
-
     await navegarParaPagina();
     await esperarCarregar();
     const dadosJson = await extrairDadosJson();
-    utils.escreverArquivo(obterCaminhoJson(), dadosJson);
+    utils.escreverArquivo(obterArquivoJson(), dadosJson);
     
     browser.close();
 
     return {
-        arquivoJson: obterCaminhoJson(),
+        arquivoJson: obterArquivoJson(),
         dadosJson: dadosJson
     };
 }

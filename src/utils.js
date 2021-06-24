@@ -2,7 +2,6 @@ const fs = require('fs');
 const jimp = require('jimp');
 const crypto = require('crypto');
 const moment = require('moment');
-const { promisify } = require('util');
 
 module.exports = {
     criarPastaSeNaoExistir(pasta) {
@@ -24,5 +23,13 @@ module.exports = {
     sleep: async (seconds) => new Promise(resolve => setTimeout(resolve, seconds * 1000)),
     escreverArquivo(arquivo, objeto) {
         fs.writeFileSync(arquivo, JSON.stringify(objeto))
+    },
+    isToday(referencia) {
+        return moment(referencia).isSame(moment(), 'day');
+    },
+    isInThisWeek(referencia) {
+        const domingo = moment().weekday(0).hour(0).minute(0).second(0);
+        const sabado = moment().weekday(7).hour(23).minute(59).second(59);
+        return moment(referencia).isBetween(domingo, sabado);
     }
 }

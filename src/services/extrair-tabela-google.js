@@ -1,10 +1,8 @@
 const pptr = require('puppeteer');
 const jimp = require('jimp');
-const moment = require('moment');
-const utils = require('./utils');
-require('dotenv').config();
+const utils = require('./../utils');
+const pastas = require('./../gerenciador-pastas');
 
-const caminhoPastaSaidaDosArquivos = process.env.caminhoPastaSaidaDosArquivos || './archive/'
 const nomeDosPrints = {
     print: 'screenshot.png',
     cabecalho: 'header.png',
@@ -13,18 +11,15 @@ const nomeDosPrints = {
     rodape: 'rodape.png',
 };
 
-const obterPasta = () => `${caminhoPastaSaidaDosArquivos}${moment().format('yyyyMMDD')}/`;
-const obterNomeArquivoPrint = () => `${obterPasta()}${nomeDosPrints.print}`;
-const obterNomeArquivoCabecalho = () => `${obterPasta()}${nomeDosPrints.cabecalho}`;
-const obterNomeArquivoCorpo1 = () => `${obterPasta()}${nomeDosPrints.corpo1}`;
-const obterNomeArquivoCorpo2 = () => `${obterPasta()}${nomeDosPrints.corpo2}`;
-const obterNomeArquivoRodape = () => `${obterPasta()}${nomeDosPrints.rodape}`;
+const obterArquivoPrint = () => `${pastas.obterPastaArquivosDoDia()}${nomeDosPrints.print}`;
+const obterArquivoCabecalho = () => `${pastas.obterPastaArquivosDoDia()}${nomeDosPrints.cabecalho}`;
+const obterArquivoCorpo1 = () => `${pastas.obterPastaArquivosDoDia()}${nomeDosPrints.corpo1}`;
+const obterArquivoCorpo2 = () => `${pastas.obterPastaArquivosDoDia()}${nomeDosPrints.corpo2}`;
+const obterArquivoRodape = () => `${pastas.obterPastaArquivosDoDia()}${nomeDosPrints.rodape}`;
 
 const url = 'https://www.google.com/search?q=brasileirao#sie=lg;/g/11llkbvms0;2;/m/0fnk7q;st;fp;1;;';
 
 async function Executar() {
-
-    utils.criarPastaSeNaoExistir(obterPasta());
 
     const browser = await pptr.launch({ headless: false });
     const page = await browser.newPage();
@@ -41,7 +36,7 @@ async function Executar() {
     }
 
     const tirarPrint = async () => {
-        await page.screenshot({ path: obterNomeArquivoPrint() });
+        await page.screenshot({ path: obterArquivoPrint() });
     }
 
     const aplicarModificacoesDeEstilo = async () => {
@@ -151,33 +146,33 @@ async function Executar() {
         const clubesPt2 = await clubesPt2DimensaoCorte();
 
 
-        jimp.read(obterNomeArquivoPrint()).then(_ => _
+        jimp.read(obterArquivoPrint()).then(_ => _
             .crop(cabecalho.x, cabecalho.y, cabecalho.width, cabecalho.height)
-            .write(obterNomeArquivoCabecalho())
+            .write(obterArquivoCabecalho())
         );
 
-        jimp.read(obterNomeArquivoPrint()).then(_ => _
+        jimp.read(obterArquivoPrint()).then(_ => _
             .crop(clubesPt1.x, clubesPt1.y, clubesPt1.width, clubesPt1.height)
-            .write(obterNomeArquivoCorpo1())
+            .write(obterArquivoCorpo1())
         );
 
-        jimp.read(obterNomeArquivoPrint()).then(_ => _
+        jimp.read(obterArquivoPrint()).then(_ => _
             .crop(clubesPt2.x, clubesPt2.y, clubesPt2.width, clubesPt2.height)
-            .write(obterNomeArquivoCorpo2())
+            .write(obterArquivoCorpo2())
         );
 
-        jimp.read(obterNomeArquivoPrint()).then(_ => _
+        jimp.read(obterArquivoPrint()).then(_ => _
             .crop(rodape.x, rodape.y, rodape.width, rodape.height)
-            .write(obterNomeArquivoRodape())
+            .write(obterArquivoRodape())
         );
 
         //utils.cortarImagem(caminhoDoArquivo, [dimensoes], 0);
         arquivosGerados = {
-            print: obterNomeArquivoPrint(),
-            cabecalho: obterNomeArquivoCabecalho(),
-            corpo1: obterNomeArquivoCorpo1(),
-            corpo2: obterNomeArquivoCorpo2(),
-            rodape: obterNomeArquivoRodape(),
+            print: obterArquivoPrint(),
+            cabecalho: obterArquivoCabecalho(),
+            corpo1: obterArquivoCorpo1(),
+            corpo2: obterArquivoCorpo2(),
+            rodape: obterArquivoRodape(),
         }
     }
 
