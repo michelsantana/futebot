@@ -7,10 +7,10 @@
 ### Como usar
 Ao clonar o projeto, configurar um arquivo .env com as seguintes informações:
 
-| chave                               | descrição                                                                                                                    |
-
-| caminhoPastaDownloadPadraoChromium  | Colocar o caminho da pasta onde o chromium baixa os arquivos por padrão. No meu caso foi em "C:/Users/[username]/Downloads/" | 
-| caminhoPastaSaidaDosArquivos        | Caminho da onde os arquivos gerados serão salvos, por padrão serão gerados em ./archive
+ chave                               | descrição                                                                                                                    
+------------------------------------- | -----------------------------------------------------------------------------------------------------------------------------
+ caminhoPastaDownloadPadraoChromium  | Colocar o caminho da pasta onde o chromium baixa os arquivos por padrão. No meu caso foi em "C:/Users/[username]/Downloads/" 
+ caminhoPastaSaidaDosArquivos        | Caminho da onde os arquivos gerados serão salvos, por padrão serão gerados em ./archive
 
 O bot 
 
