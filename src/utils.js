@@ -31,5 +31,8 @@ module.exports = {
         const domingo = moment().weekday(0).hour(0).minute(0).second(0);
         const sabado = moment().weekday(7).hour(23).minute(59).second(59);
         return moment(referencia).isBetween(domingo, sabado);
+    },
+    isAfterToday(referencia) {
+        return moment(referencia).isAfter(moment());
     }
 }

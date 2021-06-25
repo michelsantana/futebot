@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const pptr = require('puppeteer');
 const moment = require('moment');
 const utils = require('./../utils');
@@ -10,7 +9,6 @@ const obterNomeArquivoAudio = () => `${obterNomeArquivoAudioSemExtensao()}.mp3`;
 const obterArquivoDeAudio = () => `${pastas.obterPastaArquivosDoDia()}/${obterNomeArquivoAudio()}`;
 const obterArquivoDeAudioBaixado = () => `${pastas.obterPastaDownloadsChrome()}/${obterNomeArquivoAudio()}`;
 const obterPastaDeDownloads = () => pastas.obterPastaDownloadsChrome();
-const obterArquivoDiscurso = () => `${pastas.obterPastaArquivosDoDia()}/discurso.txt`;
 
 async function EsperarfinalizacaoDownload() {
 
@@ -40,7 +38,7 @@ async function EsperarfinalizacaoDownload() {
     return result;
 }
 
-async function GerarFala(arquivoDadosTabela) {
+async function GerarFala(arquivoDiscurso) {
     
     if(fs.existsSync(obterArquivoDeAudio())) return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: true }
     
@@ -49,13 +47,11 @@ async function GerarFala(arquivoDadosTabela) {
         return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: true }
     }
 
-    const scriptFala = await GerarTexto(arquivoDadosTabela);
+    const scriptFala = fs.readFileSync(arquivoDiscurso).toString();
 
     const browser = await pptr.launch({
         headless: false,
-        args: [
-            '--use-fake-ui-for-media-stream',
-        ],
+        args: [ '--use-fake-ui-for-media-stream' ],
         ignoreDefaultArgs: ['--mute-audio'],
     });
 
@@ -120,69 +116,11 @@ async function GerarFala(arquivoDadosTabela) {
     return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: downloadConcluidoComSucesso }
 }
 
-async function GerarTexto(arquivo) {
-    const mensagem = [];
-
-    function Classificacao({ classificacao, time, variacao, pontos, jogos, vitorias, empates, derrotas, golPro, golContra, saldoGols, percentual, ultimosJogo }) {
-        return {
-            classificacao: classificacao, time: time, variacao: variacao, pontos: pontos, jogos: jogos, vitorias: vitorias, empates: empates,
-            derrotas: derrotas, golPro: golPro, golContra: golContra, saldoGols: saldoGols, percentual: percentual, ultimosJogo: ultimosJogo
-        }
-    }
-
-    function add(m) {
-        mensagem.push(m)
-    }
-
-    function traduzirMomeTime(time) {
-        var nome = time;
-        if (time.indexOf('-') > -1) {
-            var textoCortado = time.split('-');
-            nome = textoCortado[0].trim();
-
-            switch (textoCortado[1]) {
-                case 'MG': nome += ` Mineiro`; break;
-                case 'PR': nome += ` Paranaense`; break;
-                case 'GO': nome += ` Goianiense`; break;
-                case 'SC': nome += ` `; break;
-            }
-        }
-        return nome;
-    }
-
-    add(`Fala torcedôr e torcedôra: Como vocês estão? Espero que estejam todos bem: `);
-    add(`Vamos ver a classificação do Brasileirão 2021 série "Ahh": `);
-    add(`Lembrando que essa é, a classificação no dia de hoje, ${moment().locale("pt-BR").format('DD [de] MMMM [de] YYYY')}: `);
-    add(`Vamos la: `);
-
-    let lstClassificacoes = [];
-    const json = JSON.parse(fs.readFileSync(arquivo));
-    json.forEach(_ => lstClassificacoes.push(new Classificacao(_)));
-    add('Ô ')
-    lstClassificacoes.forEach(_ => {
-        var c = Classificacao(_);
-        add(`${c.classificacao}º colocado é, ${traduzirMomeTime(c.time)}, com ${c.pontos} pontos, em ${c.jogos} jogos: `);
-
-        if (~~c.classificacao == 10) {
-            add('Meus parças, me ajudem a continuar com o canal: Deixa aquela deedáda no laique pra fortalecer e se inscrévi no canal: trarei novidades em breve: Então: Continuando: Ô ');
-        }
-    });
-
-    add('Gostaria de agradecer a todos que assistiram até aqui: Muitíssimo obrigado: tenham uma ótima semana:');
-    const mensagemResolvida = mensagem.join('');
-    fs.writeFileSync(`${obterArquivoDiscurso()}`, mensagemResolvida);
-    return mensagemResolvida;
+async function Executar(arquivoDoDiscurso) {
+    return await GerarFala(arquivoDoDiscurso);
 }
 
-async function Executar(arquivoJson) {
-    return await GerarFala(arquivoJson);
-}
-
-module.exports = {
-    Executar,
-    GerarTexto,
-    EsperarfinalizacaoDownload
-}
+module.exports = { Executar }
 
 /*
 

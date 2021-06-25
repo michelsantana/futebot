@@ -1,11 +1,17 @@
 const jimp = require('jimp');
 const utils = require('./../utils');
 const pastas = require('./../gerenciador-pastas');
+const moment = require('moment');
 
 const nomeArquivoPostagem = `post.png`;
-const obterArquivoPlanosDeFundoAleatorio = () => `${pastas.obterPastaDeRecursos()}/bg-${utils.aleatorio(1,7)}.png`;
+const obterArquivoPlanosDeFundoAleatorio = () => `${pastas.obterPastaDeRecursos()}/bg-${utils.aleatorio(1, 7)}.png`;
 const obterArquivoLogo = () => `${pastas.obterPastaDeRecursos()}/logo-1.png`;
 const obterArquivoPostagem = () => `${pastas.obterPastaArquivosDoDia()}${nomeArquivoPostagem}`;
+
+const cardSize = {
+    w: 1920,
+    h: 1080,
+}
 
 async function GerarTabela({ cabecalho, corpo1, corpo2, rodape }) {
 
@@ -34,52 +40,77 @@ async function GerarTabela({ cabecalho, corpo1, corpo2, rodape }) {
     });
 }
 
-const GerarMarcaDagua = async (width, height) => {
-    const font = await jimp.loadFont(jimp.FONT_SANS_32_BLACK);
-    let wm = await jimp.read(width, height, '#ffffff00');
-    await wm.print(font,
-        0,
-        0,
-        {
-            text: 'Tabela extraída de Google.com',
-            alignmentX: jimp.HORIZONTAL_ALIGN_RIGHT,
-            alignmentY: jimp.VERTICAL_ALIGN_BOTTOM
-        },
-        width,
-        height
-    )
-    .color([{ apply: 'xor', params: ['#00C043'] }])
-    .shadow({ opacity: 1, size: 1, blur: 1, x: 1, y: 1 })
-    .shadow({ opacity: 1, size: 1, blur: 1, x: -1, y: -1 });
+const GerarMarcaDagua = async () => {
+    const fonts = {
+        32: await jimp.loadFont(jimp.FONT_SANS_32_BLACK),
+        64: await jimp.loadFont(jimp.FONT_SANS_64_BLACK),
+        128: await jimp.loadFont(jimp.FONT_SANS_128_BLACK)
+    }
 
-    let logoBg = await jimp.read(width, height, '#ffffff00');
+    let wm = await jimp.read(cardSize.w, cardSize.h, '#ffffff00');
+    await wm.print(fonts[32], 0, 0,
+        { text: 'Tabela extraída de Google.com', alignmentX: jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: jimp.VERTICAL_ALIGN_BOTTOM },
+        cardSize.w, cardSize.h);
+    await wm.color([{ apply: 'xor', params: ['#FFFFFF'] }]);
+    await wm.shadow({ opacity: 1, size: 1, blur: 1, x: 1, y: 1 });
+    await wm.shadow({ opacity: 1, size: 1, blur: 1, x: -1, y: -1 });
+
+    const textHeight = jimp.measureTextHeight(fonts[64], 'Classificação', cardSize.w);
+    let tarja = await jimp.read(cardSize.w, cardSize.h, '#ffffff00');
+    await tarja
+        .print(fonts[64], 0, 0,
+            { text: 'Classificação', alignmentX: jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: jimp.VERTICAL_ALIGN_TOP },
+            cardSize.w, cardSize.h)
+        .print(fonts[128], 0, textHeight,
+            { text: 'Brasileirão Série A', alignmentX: jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: jimp.VERTICAL_ALIGN_TOP },
+            cardSize.w, cardSize.h)
+        .color([{ apply: 'xor', params: ['#F00'] }])
+        .shadow({ opacity: 1, size: 1, blur: 1, x: 1, y: 1 })
+        .shadow({ opacity: 1, size: 1, blur: 1, x: -1, y: -1 });
+
+    let tarja2 = await jimp.read(cardSize.w, cardSize.h, '#ffffff00');
+    await tarja2
+        .print(fonts[128], 0, 0,
+            { text: moment().format('DD/MM/YYYY'), alignmentX: jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: jimp.VERTICAL_ALIGN_BOTTOM },
+            cardSize.w, cardSize.h)
+        .color([{ apply: 'xor', params: ['#F00'] }])
+        .shadow({ opacity: 1, size: 1, blur: 1, x: 1, y: 1 })
+        .shadow({ opacity: 1, size: 1, blur: 1, x: -1, y: -1 });
+
+    tarja = await tarja.blit(tarja2, 0, 0);
+
+    let logoBg = await jimp.read(cardSize.w, cardSize.h, '#ffffff00');
     let logo = await jimp.read(`${obterArquivoLogo()}`);
 
-    await logoBg.blit(logo, (logoBg.getWidth() / 2) - (logo.getWidth() / 2), (logoBg.getHeight() / 2) -  (logo.getHeight() / 2))
-    .opacity(.2);
+    await logoBg.blit(logo, (logoBg.getWidth() / 2) - (logo.getWidth() / 2), (logoBg.getHeight() / 2) - (logo.getHeight() / 2))
+        .opacity(.2);
 
-    return await logoBg.blit(wm, 0, 0);
+    logobg = await logoBg.blit(wm, 0, 0);
+    return await logobg.blit(tarja, 0, 0);
 }
 
 async function GerarPlanoDeFundo() {
 
-    const width = 1920;
-    const height = 1080;
+    const tableWidth = 1280;
+    const tableHeight = 720;
 
     const jimpImagem = await jimp.read(`${obterArquivoPlanosDeFundoAleatorio()}`);
     const jimpTabela = await jimp.read(`${obterArquivoPostagem()}`);
 
-    while (jimpImagem.getWidth() < width || jimpImagem.getHeight() < height)
+    while (jimpImagem.getWidth() < cardSize.w || jimpImagem.getHeight() < cardSize.h)
         jimpImagem.resize(jimpImagem.getWidth() + 100, jimp.AUTO);
 
-    const espacoHorizontal = (jimpImagem.getWidth() - width) / 2;
-    const espacoVertical = (jimpImagem.getHeight() - height) / 2;
-    await jimpImagem
-        .crop(espacoHorizontal, espacoVertical, width, height)
-        .blur(40)
-        .blit(jimpTabela, (width / 2) - (jimpTabela.getWidth() / 2), (height / 2) - (jimpTabela.getHeight() / 2));
+    while (jimpTabela.getWidth() < tableWidth && jimpTabela.getHeight() < tableHeight)
+        jimpTabela.resize(jimpTabela.getWidth() + 100, jimp.AUTO);
 
-    const wm = await GerarMarcaDagua(width, height);
+    const espacoHorizontal = (jimpImagem.getWidth() - cardSize.w) / 2;
+    const espacoVertical = (jimpImagem.getHeight() - cardSize.h) / 2;
+    await jimpImagem
+        .crop(espacoHorizontal, espacoVertical, cardSize.w, cardSize.h)
+        .blur(40)
+        .blit(jimpTabela, (cardSize.w / 2) - (jimpTabela.getWidth() / 2), (cardSize.h / 2) - (jimpTabela.getHeight() / 2));
+
+    const wm = await GerarMarcaDagua();
     await jimpImagem.blit(wm, 0, 0);
 
     jimpImagem.write(`${obterArquivoPostagem()}`);
