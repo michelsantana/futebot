@@ -10,9 +10,11 @@ const servicoGerarVideo = require('./services/gerar-video');
 const servicoDiscurso = require('./services/gerar-discurso');
 
 const pastas = require('./gerenciador-pastas');
+const utils = require('./utils');
 
 (async () => {
-    const uniqueId = 'teste';
+    //const uniqueId = 'teste';
+    const uniqueId = utils.aleatorio(100000, 1000000);
 
     const obterArquivoDoWorkflow = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}workflow-bsa.json`;
     function Workflow(object) {
@@ -37,8 +39,6 @@ const pastas = require('./gerenciador-pastas');
         this.arquivoDeVideo = object?.arquivoDeVideo;
     }
 
-    //const uniqueId = utils.aleatorio(100000, 1000000);
-
     let workflow = new Workflow();
 
     if (fs.existsSync(obterArquivoDoWorkflow()))
@@ -52,15 +52,15 @@ const pastas = require('./gerenciador-pastas');
             return workflow.arquivoDeDados;
 
         const servicoJson = (await servicoExtrairDadosGlobo(uniqueId));
-        const dadosJson = servicoJson.obterDadosJson();
+        const arquivoDeDados = servicoJson.obterArquivoJson();
 
-        if (dadosJson) {
-            workflow.arquivoDeDados = servicoJson.obterArquivoJson();
+        if (arquivoDeDados) {
+            workflow.arquivoDeDados = arquivoDeDados;
             workflow.arquivoDeDadosProcessado = true;
             fs.writeFileSync(obterArquivoDoWorkflow(), JSON.stringify(workflow));
         }
 
-        return dadosJson;
+        return arquivoDeDados;
     }
 
     const obterTabelaClassificacao = async () => {
@@ -96,12 +96,12 @@ const pastas = require('./gerenciador-pastas');
         return arquivoDoPost;
     }
 
-    const obterDiscurso = async (dadosJson) => {
+    const obterDiscurso = async (arquivoDeDados) => {
         if (workflow.arquivoDoDiscursoProcessado)
             return workflow.arquivoDoDiscurso;
 
         const geradorDiscurso = (await servicoDiscurso(uniqueId));
-        const discurso = (await geradorDiscurso.gerarDiscursoClassificacaoSerieA(dadosJson));
+        const discurso = (await geradorDiscurso.gerarDiscursoClassificacaoSerieA(arquivoDeDados));
         const arquivoDoDiscurso = discurso.obterArquivoDiscursoClassificacaoSerieA();
 
         if (arquivoDoDiscurso) {

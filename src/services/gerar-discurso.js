@@ -18,12 +18,35 @@ function traduzirNomeTime(time) {
     return nome;
 }
 
+function traduzirDiaDaSemana(data) { 
+    return moment(data).locale('pt-BR').format('dddd'); 
+}
+
+function traduzirHoras(data) {
+    const hora = moment(data).format('HH');
+    const min = moment(data).format('mm');
+    if (~~min > 0) return `${hora} e ${min}`;
+    return `${hora} horas`
+}
+
+function traduzirTempoVerbal(data, mensagem) {
+
+    switch (mensagem) {
+        case 'ser':
+            if (moment().isAfter(data))
+                return 'foi';
+            else if (moment().isBefore(data))
+                return 'será'
+            break;
+    }
+    return mensagem;
+}
+
 module.exports = async function (uniqueId) {
 
-    this.discurso = '';
     this.obterArquivoDiscursoClassificacaoSerieA = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}_discurso-classificacao-serie-a.txt`;
     this.obterArquivoDiscursoJogosDaRodada = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}_discurso-jogos-da-semana.txt`;
-    this.obterDiscurso = () => this.discurso;
+
     this.gerarDiscursoClassificacaoSerieA = async (arquivoDeDados) => {
         const mensagem = [];
 
@@ -44,9 +67,7 @@ module.exports = async function (uniqueId) {
         add(`Vamos la: `);
 
         let lstClassificacoes = [];
-
-        const json = JSON.parse(fs.readFileSync(arquivoDeDados));
-
+        const json = JSON.parse(fs.readFileSync(arquivoDeDados).toString());
         json.forEach(_ => lstClassificacoes.push(new Classificacao(_)));
         add('Ô ')
         lstClassificacoes.forEach(_ => {
@@ -57,13 +78,10 @@ module.exports = async function (uniqueId) {
                 add('Meus parças, me ajudem a continuar com o canal: Deixa aquela deedáda no laique pra fortalecer e se inscrévi no canal: trarei novidades em breve: Então: Continuando: Ô ');
             }
         });
-
         add('Gostaria de agradecer a todos que assistiram até aqui: Muitíssimo obrigado: tenham uma ótima semana:');
 
         const mensagemResolvida = mensagem.join('');
         fs.writeFileSync(`${this.obterArquivoDiscursoClassificacaoSerieA()}`, mensagemResolvida);
-        this.discurso = mensagemResolvida;
-
         return this;
     }
 
@@ -81,29 +99,8 @@ module.exports = async function (uniqueId) {
             }
         }
 
-        function add(m) { mensagem.push(m) }
-
-
-        function traduzirDiaDaSemana(data) { return moment(data).locale('pt-BR').format('dddd'); }
-
-        function traduzirHoras(data) {
-            const hora = moment(data).format('HH');
-            const min = moment(data).format('mm');
-            if (~~min > 0) return `${hora} e ${min}`;
-            return `${hora} horas`
-        }
-
-        function traduzirTempoVerbal(data, mensagem) {
-
-            switch (mensagem) {
-                case 'ser':
-                    if (moment().isAfter(data))
-                        return 'foi';
-                    else if (moment().isBefore(data))
-                        return 'será'
-                    break;
-            }
-            return mensagem;
+        function add(m) { 
+            mensagem.push(m) 
         }
 
         function jogoClassico(sigla1, sigla2) {
@@ -112,17 +109,13 @@ module.exports = async function (uniqueId) {
             return false;
         }
 
-        
-
         let programacaoDaSemana = [];
-
-        const json = JSON.parse(fs.readFileSync(arquivoDeDados));
+        const json = JSON.parse(fs.readFileSync(arquivoDeDados).toString());
         const numeroDaRodada = json.rodada;
         json.partidas.forEach(_ => programacaoDaSemana.push(new Programacao(_)));
         programacaoDaSemana = programacaoDaSemana.sort(_ => _.dataDaPartida);
 
         add(`Fala torcedôr e torcedôra: Vamos ver como estão programados os jogos da ${numeroDaRodada}º rodada do Brasileirão Série "Ahh": `);
-
         add(`Bom, Ô `);
         programacaoDaSemana.forEach((_, i) => {
             var p = new Programacao(_);
@@ -136,14 +129,11 @@ module.exports = async function (uniqueId) {
             add(`às ${traduzirHoras(p.dataDaPartida)}: `)
             add(`${traduzirNomeTime(p.mandante)} e ${traduzirNomeTime(p.visitante)}: `);
             add(`no estádio, ${p.estadio}: `);
-
-
         });
+        add('Gostaria de agradecer a todos que assistiram até aqui: Muitíssimo obrigado: tenham uma ótima semana:');
 
         const mensagemResolvida = mensagem.join('');
         fs.writeFileSync(`${this.obterArquivoDiscursoJogosDaRodada()}`, mensagemResolvida);
-        this.discurso = mensagemResolvida;
-
         return this;
     }
 

@@ -1,6 +1,5 @@
 const moment = require('moment');
 const fs = require('fs');
-const pastas = require('./gerenciador-pastas');
 
 const servicoDados = require('./services/rodada/extrair-json-campeonato');
 const servicoTabela = require('./services/rodada/extrair-tabela-rodada-google');
@@ -10,9 +9,14 @@ const servicoGerarFala = require('./services/gerar-fala');
 const servicoGerarVideo = require('./services/gerar-video');
 const servicoDiscurso = require('./services/gerar-discurso');
 
+const pastas = require('./gerenciador-pastas');
+const utils = require('./utils');
+
 (async () => {
 
-    const uniqueId = 'x-teste-rodada';
+    //const uniqueId = 'x-teste-rodada';
+    const uniqueId = utils.aleatorio(100000, 1000000);
+
     const numeroDaRodada = 8;
     const idDoCampeonato = 767;
 
