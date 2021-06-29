@@ -1,126 +1,126 @@
+const path = require('path');
 const fs = require('fs');
 const pptr = require('puppeteer');
 const moment = require('moment');
 const utils = require('./../utils');
 const pastas = require('./../gerenciador-pastas');
 
-const obterNomeArquivoAudioSemExtensao = () => `IBM_AUDIO_${moment().format('yyyyMMDD')}`;
-const obterNomeArquivoAudio = () => `${obterNomeArquivoAudioSemExtensao()}.mp3`;
-const obterArquivoDeAudio = () => `${pastas.obterPastaArquivosDoDia()}/${obterNomeArquivoAudio()}`;
-const obterArquivoDeAudioBaixado = () => `${pastas.obterPastaDownloadsChrome()}/${obterNomeArquivoAudio()}`;
-const obterPastaDeDownloads = () => pastas.obterPastaDownloadsChrome();
+module.exports = async function (uniqueId) {
 
-async function EsperarfinalizacaoDownload() {
+    this.obterNomeArquivoAudioSemExtensao = () => `${uniqueId}_IBM_AUDIO`;
+    this.obterNomeArquivoAudio = () => `${this.obterNomeArquivoAudioSemExtensao()}.mp3`;
+    this.obterArquivoDeAudio = () => `${pastas.obterPastaArquivosDoDia()}/${this.obterNomeArquivoAudio()}`;
+    this.obterArquivoDeAudioBaixado = () => `${pastas.obterPastaDownloadsChrome()}/${this.obterNomeArquivoAudio()}`;
+    this.obterPastaDeDownloads = () => pastas.obterPastaDownloadsChrome();
 
-    await utils.sleep(1);
-    const quantidadeTentativasMaxima = 10;
-    let result = false;
-    let tentativaAtual = 1;
-    while (tentativaAtual++ < quantidadeTentativasMaxima) {
-        let arquivos = fs.readdirSync(obterPastaDeDownloads());
 
-        try {
-            for (var a of arquivos) {
-                if (a == obterNomeArquivoAudio()) {
-                    tentativaAtual = 99;
-                    result = true;
-                    fs.copyFileSync(`${obterArquivoDeAudioBaixado()}`, `${obterArquivoDeAudio()}`);
-                    break;
+    this.gerarArquivoDeAudio = async (arquivoDoDiscurso) => {
+        const EsperarfinalizacaoDownload = async () => {
+
+            await utils.sleep(1);
+            const quantidadeTentativasMaxima = 10;
+            let result = false;
+            let tentativaAtual = 1;
+            while (tentativaAtual++ < quantidadeTentativasMaxima) {
+                let arquivos = fs.readdirSync(this.obterPastaDeDownloads());
+
+                try {
+                    for (var a of arquivos) {
+                        if (a == this.obterNomeArquivoAudio()) {
+                            tentativaAtual = 99;
+                            result = true;
+                            fs.copyFileSync(`${this.obterArquivoDeAudioBaixado()}`, `${this.obterArquivoDeAudio()}`);
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    console.log(e, tentativaAtual);
                 }
+                if (result) break;
+                await utils.sleep(tentativaAtual);
             }
-        } catch (e) {
-            console.log(e, tentativaAtual);
+
+            return result;
         }
-        if (result) break;
-        await utils.sleep(tentativaAtual);
-    }
 
-    return result;
-}
+        if (fs.existsSync(this.obterArquivoDeAudio())) return this;
 
-async function GerarFala(arquivoDiscurso) {
-    
-    if(fs.existsSync(obterArquivoDeAudio())) return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: true }
-    
-    if(fs.existsSync(obterArquivoDeAudioBaixado())) {
+        if (fs.existsSync(this.obterArquivoDeAudioBaixado())) {
+            await EsperarfinalizacaoDownload();
+            return this;
+        }
+
+        const scriptFala = fs.readFileSync(arquivoDoDiscurso).toString();
+
+        const browser = await pptr.launch({
+            headless: false,
+            args: ['--use-fake-ui-for-media-stream'],
+            ignoreDefaultArgs: ['--mute-audio'],
+        });
+
+        const page = await browser.newPage();
+
+        await page.setViewport({ width: 1280, height: 720 });
+        await page.goto('https://www.ibm.com/demos/live/tts-demo/self-service/home', { waitUntil: 'networkidle2' });
+
+        await page.waitForSelector('audio');
+
+        await page.evaluate(() => document.querySelector('#text-area').value = '');
+
+        await page.type('#text-area', scriptFala);
+        await page.waitForTimeout(720);
+
+        await page.click('#slider');
+        await page.waitForTimeout(720);
+        await page.keyboard.press('ArrowLeft');
+        await page.waitForTimeout(720);
+        await page.keyboard.press('ArrowLeft');
+
+        await page.click('#downshift-3-toggle-button');
+        await page.waitForTimeout(720);
+
+        await page.evaluate((nomeDoArquivoDownload) => {
+
+            var audio = document.querySelector('audio');
+            audio.onplay = function () {
+
+                let link = document.createElement('a');
+                link.innerHTML = 'IndicadorDeInicialização';
+                link.setAttribute(`href`, audio.src);
+                link.setAttribute(`download`, nomeDoArquivoDownload);
+                link.setAttribute('id', 'dwl');
+                link.setAttribute('style', `position:absolute;top:50px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
+                document.body.append(link);
+            }
+
+            audio.onended = function () {
+                let link = document.createElement('a');
+                link.innerHTML = 'IndicadorDeFinalização';
+                link.setAttribute(`href`, '#');
+                link.setAttribute('id', 'dwlend');
+                link.setAttribute('style', `position:absolute;top:100px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
+                document.body.append(link);
+            }
+
+        }, this.obterNomeArquivoAudio());
+
+        await page.click('.play-btn.bx--btn');
+        await page.waitForSelector('audio[src]');
+
+        await page.waitForSelector('#dwl', { timeout: 60000 });
+        await page.click('#dwl');
+
+        await page.waitForSelector('#dwlend', { timeout: 60000 * 5 }); // espera até 5 minutos
+
         await EsperarfinalizacaoDownload();
-        return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: true }
+
+        await page.close();
+        await browser.close();
+        return this;
     }
 
-    const scriptFala = fs.readFileSync(arquivoDiscurso).toString();
-
-    const browser = await pptr.launch({
-        headless: false,
-        args: [ '--use-fake-ui-for-media-stream' ],
-        ignoreDefaultArgs: ['--mute-audio'],
-    });
-
-    const page = await browser.newPage();
-    //await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: 'D:/Git/tools/text-to-speech/archive'});
-    await page.setViewport({ width: 1280, height: 720 });
-    await page.goto('https://www.ibm.com/demos/live/tts-demo/self-service/home', { waitUntil: 'networkidle2' });
-
-    await page.waitForSelector('audio');
-
-    await page.evaluate(() => document.querySelector('#text-area').value = '');
-
-    await page.type('#text-area', scriptFala);
-    await page.waitForTimeout(720);
-
-    await page.click('#slider');
-    await page.waitForTimeout(720);
-    await page.keyboard.press('ArrowLeft');
-    await page.waitForTimeout(720);
-    await page.keyboard.press('ArrowLeft');
-
-    await page.click('#downshift-3-toggle-button');
-    await page.waitForTimeout(720);
-
-    await page.evaluate((nomeDoArquivoDownload) => {
-
-        var audio = document.querySelector('audio');
-        audio.onplay = function () {
-
-            let link = document.createElement('a');
-            link.innerHTML = 'IndicadorDeInicialização';
-            link.setAttribute(`href`, audio.src);
-            link.setAttribute(`download`, nomeDoArquivoDownload);
-            link.setAttribute('id', 'dwl');
-            link.setAttribute('style', `position:absolute;top:50px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
-            document.body.append(link);
-        }
-
-        audio.onended = function () {
-            let link = document.createElement('a');
-            link.innerHTML = 'IndicadorDeFinalização';
-            link.setAttribute(`href`, '#');
-            link.setAttribute('id', 'dwlend');
-            link.setAttribute('style', `position:absolute;top:100px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
-            document.body.append(link);
-        }
-
-    }, obterNomeArquivoAudio());
-
-    await page.click('.play-btn.bx--btn');
-    await page.waitForSelector('audio[src]');
-
-    await page.waitForSelector('#dwl', { timeout: 60000 });
-    await page.click('#dwl');
-
-    await page.waitForSelector('#dwlend', { timeout: 60000 * 5 }); // espera até 5 minutos
-
-    const downloadConcluidoComSucesso = await EsperarfinalizacaoDownload();
-    await page.close();
-    await browser.close();
-
-    return { arquivoAudio: `${obterArquivoDeAudio()}`, arquivoBaixado: obterArquivoDeAudioBaixado(), arquivoGerado: downloadConcluidoComSucesso }
+    return this;
 }
-
-async function Executar(arquivoDoDiscurso) {
-    return await GerarFala(arquivoDoDiscurso);
-}
-
-module.exports = { Executar }
 
 /*
 

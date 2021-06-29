@@ -1,30 +1,35 @@
 const pptr = require('puppeteer');
 const cheerio = require('cheerio');
-const utils = require('./../utils');
-const pastas = require('./../gerenciador-pastas');
+const utils = require('./../../utils');
+const pastas = require('./../../gerenciador-pastas');
 
 const nomeDoJson = 'classificacao.json';
 const url = 'https://ge.globo.com/futebol/brasileirao-serie-a/';
 
-const obterArquivoJson = () => `${pastas.obterPastaArquivosDoDia()}${nomeDoJson}`;
 
-async function Executar() {
+
+module.exports = async function (uniqueId) {
+    
+    this.dadosJson = null;
+    this.obterArquivoJson = () => `${pastas.obterPastaArquivosDoDia()}${uniqueId}_${nomeDoJson}`;
+    this.obterDadosJson = () => this.dadosJson;
+    
 
     const browser = await pptr.launch({ headless: false });
     const page = await browser.newPage();
     await page.setViewport({ width: 1550, height: 5000 });
 
-    async function navegarParaPagina() {
+    this.navegarParaPagina = async () => {
         try { await page.goto(url, { waitUntil: 'networkidle2' }); }
         catch (e) { await page.goto(url, { waitUntil: 'networkidle2' }); }
     }
 
-    async function esperarCarregar() {
+    this.esperarCarregar = async () => {
         await page.waitForSelector('.tabela__futebol');
         await utils.sleep(1);
     }
 
-    async function extrairDadosJson() {
+    this.extrairDadosJson = async () => {
         const html = await page.evaluate(() => window.$('.tabela__futebol').html());
         const $ = cheerio.load(html);
 
@@ -137,15 +142,10 @@ async function Executar() {
 
     await navegarParaPagina();
     await esperarCarregar();
-    const dadosJson = await extrairDadosJson();
-    utils.escreverArquivo(obterArquivoJson(), dadosJson);
-    
+    this.dadosJson = await extrairDadosJson();
+    utils.escreverArquivo(this.obterArquivoJson(), this.dadosJson);
+
     browser.close();
 
-    return {
-        arquivoJson: obterArquivoJson(),
-        dadosJson: dadosJson
-    };
+    return this;
 }
-
-module.exports = { Executar }

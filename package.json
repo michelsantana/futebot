@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "gerar:bsa": "node ./src/gerar-video-classificacao-serie-a",
+    "gerar:jdr": "node ./src/gerar-video-rodadas",
     "test": "mocha"
   },
   "dependencies": {
