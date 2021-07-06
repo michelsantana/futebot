@@ -4,7 +4,7 @@ const moment = require('moment');
 const pastas = require('./../../gerenciador-pastas');
 const utils = require('./../../utils');
 
-module.exports = async function (uniqueId, idDoCampeonato, numeroDaRodada) {
+module.exports = async function (uniqueId, idDoCampeonato, serie, numeroDaRodada) {
 
     const gerarUrlDadosPartidas = () => `https://apifutebol.footstats.com.br/3.1/campeonatos/${idDoCampeonato}/partidas`;
     const gerarUrlDadosEquipes = () => `https://apifutebol.footstats.com.br/3.1/campeonatos/${idDoCampeonato}/equipes`;
@@ -73,7 +73,7 @@ module.exports = async function (uniqueId, idDoCampeonato, numeroDaRodada) {
     const partidas = await ObterDadosDasPartidas();
     const partidasDaRodada = await ObterPartidasDaRodada(partidas.data, equipes);
 
-    fs.writeFileSync(this.obterArquivoDeDados(), JSON.stringify({ rodada: numeroDaRodada, partidas: partidasDaRodada }));
+    fs.writeFileSync(this.obterArquivoDeDados(), JSON.stringify({ rodada: numeroDaRodada, serie: serie, partidas: partidasDaRodada }));
 
     return this;
 }

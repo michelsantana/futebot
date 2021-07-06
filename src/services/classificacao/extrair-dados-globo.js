@@ -3,17 +3,15 @@ const cheerio = require('cheerio');
 const utils = require('./../../utils');
 const pastas = require('./../../gerenciador-pastas');
 
-const nomeDoJson = 'classificacao.json';
-const url = 'https://ge.globo.com/futebol/brasileirao-serie-a/';
 
+module.exports = async function (uniqueId, serie) {
 
-
-module.exports = async function (uniqueId) {
-    
     this.dadosJson = null;
+    const nomeDoJson = `classificacao-serie-${serie}.json`;
     this.obterArquivoJson = () => `${pastas.obterPastaArquivosDoDia()}${uniqueId}_${nomeDoJson}`;
     this.obterDadosJson = () => this.dadosJson;
-    
+
+    const url = `https://ge.globo.com/futebol/brasileirao-serie-${serie.toLowerCase()}/`;
 
     const browser = await pptr.launch({ headless: false });
     const page = await browser.newPage();
@@ -143,7 +141,7 @@ module.exports = async function (uniqueId) {
     await navegarParaPagina();
     await esperarCarregar();
     this.dadosJson = await extrairDadosJson();
-    utils.escreverArquivo(this.obterArquivoJson(), this.dadosJson);
+    utils.escreverArquivo(this.obterArquivoJson(), { serie: serie, classificacao: this.dadosJson });
 
     browser.close();
 

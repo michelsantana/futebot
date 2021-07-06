@@ -29,6 +29,12 @@ function traduzirHoras(data) {
     return `${hora} horas`
 }
 
+function traduzirDiaDoMes(data){
+    let dia = moment(data).locale("pt-BR").format('D');
+    if(~~dia == 1) dia = 'primeiro';
+    return `${dia} de ${moment(data).locale("pt-BR").format('MMMM [de] YYYY')}`;
+}
+
 function traduzirTempoVerbal(data, mensagem) {
 
     switch (mensagem) {
@@ -61,14 +67,17 @@ module.exports = async function (uniqueId) {
             mensagem.push(m)
         }
 
-        add(`Fala torcedôr e torcedôra: Como vocês estão? Espero que estejam todos bem: `);
-        add(`Vamos ver a classificação do Brasileirão 2021 série "Ahh": `);
-        add(`Lembrando que essa é, a classificação no dia de hoje, ${moment().locale("pt-BR").format('DD [de] MMMM [de] YYYY')}: `);
-        add(`Vamos la: `);
-
+      
         let lstClassificacoes = [];
         const json = JSON.parse(fs.readFileSync(arquivoDeDados).toString());
-        json.forEach(_ => lstClassificacoes.push(new Classificacao(_)));
+        const serie = json.serie;
+        json.classificacao.forEach(_ => lstClassificacoes.push(new Classificacao(_)));
+        
+        add(`Fala torcedôr e torcedôra: Como vocês estão? Espero que estejam todos bem: `);
+        add(`Vamos ver a classificação do Brasileirão 2021 série "${serie.toUpperCase()}": `);
+        add(`Lembrando que essa é, a classificação no dia de hoje, ${traduzirDiaDoMes(moment())}: `);
+        add(`Vamos la: `);
+        
         add('Ô ')
         lstClassificacoes.forEach(_ => {
             var c = Classificacao(_);
@@ -112,11 +121,12 @@ module.exports = async function (uniqueId) {
         let programacaoDaSemana = [];
         const json = JSON.parse(fs.readFileSync(arquivoDeDados).toString());
         const numeroDaRodada = json.rodada;
+        const serie = json.serie;
         json.partidas.forEach(_ => programacaoDaSemana.push(new Programacao(_)));
         programacaoDaSemana = programacaoDaSemana.sort(_ => _.dataDaPartida);
 
-        add(`Fala torcedôr e torcedôra: Vamos ver como estão programados os jogos da ${numeroDaRodada}º rodada do Brasileirão Série "Ahh": `);
-        add(`Bom, Ô `);
+        add(`Fala torcedôr e torcedôra: Vamos ver como estão programados os jogos da ${numeroDaRodada}ª rodada do Brasileirão Série "${serie}": `);
+        add(`Vamos la: Ô `);
         programacaoDaSemana.forEach((_, i) => {
             var p = new Programacao(_);
             add(`${i + 1}º jogo `)

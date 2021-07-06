@@ -3,19 +3,20 @@ const jimp = require('jimp');
 const utils = require('./../../utils');
 const pastas = require('./../../gerenciador-pastas');
 
+const url = {
+    A: 'https://www.google.com/search?q=brasileirao#sie=lg;/g/11llkbvms0;2;/m/0fnk7q;st;fp;1;;',
+    B: 'https://www.google.com/search?q=brasileirao#sie=lg;/g/11qqj9rdw7;2;/m/0fnkb5;st;fp;1;;'
+}
 
-
-const url = 'https://www.google.com/search?q=brasileirao#sie=lg;/g/11llkbvms0;2;/m/0fnk7q;st;fp;1;;';
-
-module.exports = async function (uniqueId) {
+module.exports = async function (uniqueId, serie) {
 
     this.nomeDosArquivos = {
-        print: `screenshot.png`,
-        cabecalho: `header.png`,
-        corpo1: `corpo1.png`,
-        corpo2: `corpo2.png`,
-        rodape: `rodape.png`,
-        tabela: `tabela.png`
+        print: `screenshot-serie-${serie}.png`,
+        cabecalho: `header-serie-${serie}.png`,
+        corpo1: `corpo1-serie-${serie}.png`,
+        corpo2: `corpo2-serie-${serie}.png`,
+        rodape: `rodape-serie-${serie}.png`,
+        tabela: `tabela-serie-${serie}.png`
     };
 
     this.obterArquivoPrint = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}_${this.nomeDosArquivos.print}`;
@@ -30,8 +31,8 @@ module.exports = async function (uniqueId) {
     page.setViewport({ width: 1550, height: 5000 });
 
     const abrirPagina = async () => {
-        try { await page.goto(url, { waitUntil: 'networkidle2' }); }
-        catch (e) { await page.goto(url, { waitUntil: 'networkidle2' }); }
+        try { await page.goto(url[serie.toUpperCase()], { waitUntil: 'networkidle2' }); }
+        catch (e) { await page.goto(url[serie.toUpperCase()], { waitUntil: 'networkidle2' }); }
     }
 
     const esperarCarregar = async () => {

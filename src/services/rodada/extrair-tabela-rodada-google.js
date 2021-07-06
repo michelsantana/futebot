@@ -3,9 +3,12 @@ const jimp = require('jimp');
 const utils = require('./../../utils');
 const pastas = require('./../../gerenciador-pastas');
 
-const url = 'https://www.google.com/search?q=brasileirao#sie=lg;/g/11llkbvms0;2;/m/0fnk7q;mt;fp;1;;';
+const url = {
+    A: 'https://www.google.com/search?q=brasileirao#sie=lg;/g/11llkbvms0;2;/m/0fnk7q;mt;fp;1;;',
+    B: 'https://www.google.com/search?q=brasileirao#sie=lg;/g/11qqj9rdw7;2;/m/0fnkb5;mt;fp;1;;'
+};
 
-module.exports = async function (uniqueId, numeroDaRodada) {
+module.exports = async function (uniqueId, serie, numeroDaRodada) {
 
     this.obterArquivoDaTabela = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}_tabela-rodada.png`;
 
@@ -14,8 +17,8 @@ module.exports = async function (uniqueId, numeroDaRodada) {
     page.setViewport({ width: 1550, height: 5000 });
 
     const abrirPagina = async () => {
-        try { await page.goto(url, { waitUntil: 'networkidle2' }); }
-        catch (e) { await page.goto(url, { waitUntil: 'networkidle2' }); }
+        try { await page.goto(url[serie], { waitUntil: 'networkidle2' }); }
+        catch (e) { await page.goto(url[serie], { waitUntil: 'networkidle2' }); }
     }
 
     const esperarCarregar = async () => {

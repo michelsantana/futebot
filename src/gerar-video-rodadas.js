@@ -12,13 +12,26 @@ const servicoDiscurso = require('./services/gerar-discurso');
 const pastas = require('./gerenciador-pastas');
 const utils = require('./utils');
 
+const campeonatosConfig = {
+    SerieA: {
+        idDoCampeonato: 767,
+        serie: "A"
+    },
+    SerieB: {
+        idDoCampeonato: 769,
+        serie: "B"
+    }
+};
+
 (async () => {
 
     //const uniqueId = 'x-teste-rodada';
     const uniqueId = utils.aleatorio(100000, 1000000);
+    const config = campeonatosConfig.SerieB;
+    const numeroDaRodada = 10;
 
-    const numeroDaRodada = 8;
-    const idDoCampeonato = 767;
+    const serie = config.serie;
+    const idDoCampeonato = config.idDoCampeonato;
 
     const obterArquivoDoWorkflow = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}-${idDoCampeonato}-${numeroDaRodada}_workflow-rodadas.json`;
     
@@ -57,7 +70,7 @@ const utils = require('./utils');
 
         if (workflow.arquivoDeDados) return workflow.arquivoDeDados; 
 
-        const arquivoDosDados = (await servicoDados(uniqueId, idDoCampeonato, numeroDaRodada)).obterArquivoDeDados();
+        const arquivoDosDados = (await servicoDados(uniqueId, idDoCampeonato, serie, numeroDaRodada)).obterArquivoDeDados();
 
         if (arquivoDosDados) {
             workflow.arquivoDeDados = arquivoDosDados;
@@ -72,7 +85,7 @@ const utils = require('./utils');
 
         if (workflow.arquivoDaTabela) return workflow.arquivoDaTabela;
 
-        const arquivoDaTabela = (await servicoTabela(uniqueId, numeroDaRodada)).obterArquivoDaTabela();
+        const arquivoDaTabela = (await servicoTabela(uniqueId, serie, numeroDaRodada)).obterArquivoDaTabela();
 
         if (arquivoDaTabela) {
             workflow.arquivoDaTabela = arquivoDaTabela;
@@ -88,7 +101,7 @@ const utils = require('./utils');
         if (workflow.arquivoDoPostProcessado) return workflow.arquivoDoPost;
 
         const arquivoDoPost = (await servicoGerarCard(arquivoDaTabela,
-            'Calendário', `Jogos da Rodada ${numeroDaRodada}`, moment().format('DD/MM/yyyy')))
+            'Calendário', `Jogos da ${numeroDaRodada}º Rodada - Serie ${serie}`, moment().format('DD/MM/yyyy')))
             .obterArquivoPostagem();
 
         if (arquivoDoPost) {

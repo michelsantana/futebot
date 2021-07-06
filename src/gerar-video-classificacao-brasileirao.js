@@ -3,6 +3,7 @@ const fs = require('fs');
 
 const servicoExtrairDadosGlobo = require('./services/classificacao/extrair-dados-globo');
 const servicoExtrairTabelaGoogle = require('./services/classificacao/extrair-tabela-google');
+//const servicoAtributosDoVideo = require('./services/classificacao/gerar-atributos-video');
 
 const servicoGerarCard = require('./services/gerar-card');
 const servicoGerarFala = require('./services/gerar-fala');
@@ -14,9 +15,10 @@ const utils = require('./utils');
 
 (async () => {
     //const uniqueId = 'teste';
-    const uniqueId = utils.aleatorio(100000, 1000000);
+    const uniqueId = `SB-${utils.aleatorio(100000, 1000000)}`;
+    const serie = 'B';
 
-    const obterArquivoDoWorkflow = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}workflow-bsa.json`;
+    const obterArquivoDoWorkflow = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}workflow-brasileirao.json`;
     function Workflow(object) {
         this.uniqueId = object?.uniqueId;
 
@@ -51,7 +53,7 @@ const utils = require('./utils');
         if (workflow.arquivoDeDadosProcessado)
             return workflow.arquivoDeDados;
 
-        const servicoJson = (await servicoExtrairDadosGlobo(uniqueId));
+        const servicoJson = (await servicoExtrairDadosGlobo(uniqueId, serie));
         const arquivoDeDados = servicoJson.obterArquivoJson();
 
         if (arquivoDeDados) {
@@ -67,7 +69,7 @@ const utils = require('./utils');
         if (workflow.arquivoDaTabelaProcessado)
             return workflow.arquivoDaTabela;
 
-        const servicoTabela = (await servicoExtrairTabelaGoogle(uniqueId));
+        const servicoTabela = (await servicoExtrairTabelaGoogle(uniqueId, serie));
         const tabelaClassificacao = servicoTabela.obterArquivoDaTabela();
 
         if (tabelaClassificacao) {
@@ -84,7 +86,7 @@ const utils = require('./utils');
             return workflow.arquivoDoPost;
 
         const arquivoDoPost = (await servicoGerarCard(tabelaClassificacao,
-            'Classificação atualizada!', 'Brasileirão Série A', moment().format('DD/MM/yyyy')))
+            'Classificação atualizada!', `Brasileirão Série ${serie.toUpperCase()}`, moment().format('DD/MM/yyyy')))
             .obterArquivoPostagem();
 
         if (arquivoDoPost) {
