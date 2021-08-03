@@ -1,0 +1,425 @@
+{
+    "data": [
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Avaí",
+            "cidade": "Florianopolis",
+            "estado": "SC",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/avai.png",
+            "sigla": "AVA",
+            "idTecnico": 948,
+            "tecnico": "Claudinei Oliveira",
+            "sde": {
+                "equipe_id": 314
+            },
+            "id": 1256
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": "botafoguense",
+            "torcedorNoPlural": "botafoguenses",
+            "timeFantasia": false,
+            "nome": "Botafogo",
+            "cidade": "Rio de Janeiro",
+            "estado": "RJ",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": true,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/botafogo.png",
+            "sigla": "BOT",
+            "idTecnico": 1115,
+            "tecnico": "Marcelo Chamusca",
+            "sde": {
+                "equipe_id": 263
+            },
+            "id": 1003
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Brasil de Pelotas",
+            "cidade": "Pelotas",
+            "estado": "RS",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/brasil-de-pelotas.png",
+            "sigla": "BRS",
+            "idTecnico": 1429,
+            "tecnico": "Cláudio Tencatti",
+            "sde": {
+                "equipe_id": 309
+            },
+            "id": 1271
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Brusque",
+            "cidade": "Brusque",
+            "estado": "SC",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/brusque.png",
+            "sigla": "BFC",
+            "idTecnico": 2351,
+            "tecnico": "Jerson Testoni",
+            "sde": {
+                "equipe_id": 1297
+            },
+            "id": 1743
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Confiança-SE",
+            "cidade": "Aracaju",
+            "estado": "SE",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/confianca.png",
+            "sigla": "CON",
+            "idTecnico": 1902,
+            "tecnico": "Rodrigo Santana",
+            "sde": {
+                "equipe_id": 337
+            },
+            "id": 1552
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": "coxa",
+            "torcedorNoPlural": "coxa",
+            "timeFantasia": false,
+            "nome": "Coritiba",
+            "cidade": "Curitiba",
+            "estado": "PR",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": true,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/coritiba.png",
+            "sigla": "CFC",
+            "idTecnico": 1264,
+            "tecnico": "Gustavo Eliseo Morínigo",
+            "sde": {
+                "equipe_id": 294
+            },
+            "id": 1008
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "CRB",
+            "cidade": "Maceió",
+            "estado": "AL",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/crb.png",
+            "sigla": "CRB",
+            "idTecnico": 2376,
+            "tecnico": "Allan Aal",
+            "sde": {
+                "equipe_id": 340
+            },
+            "id": 1307
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": "cruzeirense",
+            "torcedorNoPlural": "cruzeirenses",
+            "timeFantasia": false,
+            "nome": "Cruzeiro",
+            "cidade": "Belo Horizonte",
+            "estado": "MG",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": true,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/cruzeiro.png",
+            "sigla": "CRU",
+            "idTecnico": 2651,
+            "tecnico": "Denis Iwamura",
+            "sde": {
+                "equipe_id": 283
+            },
+            "id": 1017
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "CSA",
+            "cidade": "Macéio",
+            "estado": "AL",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/csa.png",
+            "sigla": "CSA",
+            "idTecnico": 16,
+            "tecnico": "Ney Franco",
+            "sde": {
+                "equipe_id": 341
+            },
+            "id": 1412
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": "emeraldino",
+            "torcedorNoPlural": "esmeraldinos",
+            "timeFantasia": false,
+            "nome": "Goiás",
+            "cidade": "Goiania",
+            "estado": "GO",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/goias.png",
+            "sigla": "GOI",
+            "idTecnico": 201,
+            "tecnico": "Pintado",
+            "sde": {
+                "equipe_id": 290
+            },
+            "id": 1014
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Guarani",
+            "cidade": "Campinas",
+            "estado": "SP",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/guarani.png",
+            "sigla": "GFC",
+            "idTecnico": 1689,
+            "tecnico": "Daniel Paulista",
+            "sde": {
+                "equipe_id": 279
+            },
+            "id": 1069
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Londrina",
+            "cidade": "Londrina",
+            "estado": "PR",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/londrina.png",
+            "sigla": "LON",
+            "idTecnico": 360,
+            "tecnico": "Márcio Fernandes",
+            "sde": {
+                "equipe_id": 319
+            },
+            "id": 1298
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Náutico",
+            "cidade": "Recife",
+            "estado": "PE",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/nautico.png",
+            "sigla": "NAU",
+            "idTecnico": 31,
+            "tecnico": "Hélio dos Anjos",
+            "sde": {
+                "equipe_id": 343
+            },
+            "id": 1222
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Operário-PR",
+            "cidade": "Ponta Grossa",
+            "estado": "PR",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/operario-pr.png",
+            "sigla": "OPE",
+            "idTecnico": 1979,
+            "tecnico": "Matheus Costa",
+            "sde": {
+                "equipe_id": 321
+            },
+            "id": 2168
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": "alvinegro",
+            "torcedorNoPlural": "anvinegros",
+            "timeFantasia": false,
+            "nome": "Ponte Preta",
+            "cidade": "Campinas",
+            "estado": "SP",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/ponte-preta.png",
+            "sigla": "PON",
+            "idTecnico": 173,
+            "tecnico": "Gilson Kleina",
+            "sde": {
+                "equipe_id": 303
+            },
+            "id": 1023
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Remo",
+            "cidade": "Belem",
+            "estado": "PA",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/clube-do-remo.png",
+            "sigla": "REM",
+            "idTecnico": 2046,
+            "tecnico": "Felipe Conceição",
+            "sde": {
+                "equipe_id": 364
+            },
+            "id": 1308
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Sampaio Corrêa",
+            "cidade": "São Luís",
+            "estado": "MA",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/sampaio-correa.png",
+            "sigla": "SAM",
+            "idTecnico": 1176,
+            "tecnico": "Felipe Surian",
+            "sde": {
+                "equipe_id": 363
+            },
+            "id": 1540
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": "vascaino",
+            "torcedorNoPlural": "vascainos",
+            "timeFantasia": false,
+            "nome": "Vasco",
+            "cidade": "Rio de Janeiro",
+            "estado": "RJ",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": true,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/vasco.png",
+            "sigla": "VAS",
+            "idTecnico": 1135,
+            "tecnico": "Marcelo Cabo",
+            "sde": {
+                "equipe_id": 267
+            },
+            "id": 1015
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": null,
+            "torcedorNoPlural": null,
+            "timeFantasia": false,
+            "nome": "Vila Nova",
+            "cidade": "Goiania",
+            "estado": "GO",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/vila-nova.png",
+            "sigla": "VIL",
+            "idTecnico": 2644,
+            "tecnico": "Higo Magalhães",
+            "sde": {
+                "equipe_id": 375
+            },
+            "id": 1152
+        },
+        {
+            "selecao": false,
+            "torcedorNoSingular": "rubro-negro",
+            "torcedorNoPlural": "rubro-negros",
+            "timeFantasia": false,
+            "nome": "Vitória",
+            "cidade": "Salvador",
+            "estado": "BA",
+            "pais": "Brasil",
+            "grupo": null,
+            "isTimeGrande": false,
+            "hasScout": true,
+            "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/vitoria.png",
+            "sigla": "VIT",
+            "idTecnico": 1785,
+            "tecnico": "Ramon Menezes",
+            "sde": {
+                "equipe_id": 287
+            },
+            "id": 1174
+        }
+    ],
+    "pagination": null
+}

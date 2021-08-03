@@ -113,27 +113,30 @@ module.exports = async function (uniqueId, serie) {
             return historico;
         }
 
-        for (const tr in linhasTabelaEquipe) {
+        linhasTabelaEquipe.forEach((_, tr) => {
             const linhaEquipe = linhasTabelaEquipe[tr];
             const linhaPontos = linhasTabelaPontos[tr];
             const time = extrairTime(linhaEquipe);
-            resultado.push(new objetoTabela(
-                $(linhaEquipe).find('td').eq(colunasEquipe.classificacao).text(),
-                time[0],
-                time[1],
-                extrairVariacao(linhaEquipe),
-                $(linhaPontos).find('td').eq(colunasPontos.pontos).text(),
-                $(linhaPontos).find('td').eq(colunasPontos.jogos).text(),
-                $(linhaPontos).find('td').eq(colunasPontos.vitorias).text(),
-                $(linhaPontos).find('td').eq(colunasPontos.empates).text(),
-                $(linhaPontos).find('td').eq(colunasPontos.derrotas).text(),
-                $(linhaPontos).find('td').eq(colunasPontos.golPro).text(),
-                $(linhaPontos).find('td').eq(colunasPontos.golContra).text(),
-                $(linhaPontos).find('td').eq(colunasPontos.saldoGols).text(),
-                $(linhaPontos).find('td').eq(colunasPontos.percentual).text(),
-                extrairHistorico(linhaPontos)
-            ));
-        }
+            resultado.push(
+                new objetoTabela(
+                    $(linhaEquipe).find('td').eq(colunasEquipe.classificacao).text(),
+                    time[0],
+                    time[1],
+                    extrairVariacao(linhaEquipe),
+                    $(linhaPontos).find('td').eq(colunasPontos.pontos).text(),
+                    $(linhaPontos).find('td').eq(colunasPontos.jogos).text(),
+                    $(linhaPontos).find('td').eq(colunasPontos.vitorias).text(),
+                    $(linhaPontos).find('td').eq(colunasPontos.empates).text(),
+                    $(linhaPontos).find('td').eq(colunasPontos.derrotas).text(),
+                    $(linhaPontos).find('td').eq(colunasPontos.golPro).text(),
+                    $(linhaPontos).find('td').eq(colunasPontos.golContra).text(),
+                    $(linhaPontos).find('td').eq(colunasPontos.saldoGols).text(),
+                    $(linhaPontos).find('td').eq(colunasPontos.percentual).text(),
+                    extrairHistorico(linhaPontos)
+                )
+            );
+            console.log();
+        });
 
         return resultado;
     }

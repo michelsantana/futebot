@@ -1,0 +1,422 @@
+[
+  {
+    "selecao": false,
+    "torcedorNoSingular": "america",
+    "torcedorNoPlural": "americas",
+    "timeFantasia": false,
+    "nome": "América-MG",
+    "cidade": "Belo Horizonte",
+    "estado": "MG",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/america-mg.png",
+    "sigla": "AMG",
+    "idTecnico": 54,
+    "tecnico": "Vágner Mancini",
+    "sde": {
+      "equipe_id": 327
+    },
+    "id": 1085
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "atleticano",
+    "torcedorNoPlural": "atleticanos",
+    "timeFantasia": false,
+    "nome": "Athletico-PR",
+    "cidade": "Curitiba",
+    "estado": "PR",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/athletico-pr.png",
+    "sigla": "CAP",
+    "idTecnico": 2597,
+    "tecnico": "António Oliveira",
+    "sde": {
+      "equipe_id": 293
+    },
+    "id": 1010
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": null,
+    "torcedorNoPlural": null,
+    "timeFantasia": false,
+    "nome": "Atlético-GO",
+    "cidade": "Goiania",
+    "estado": "GO",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/atletico-go.png",
+    "sigla": "AGO",
+    "idTecnico": 893,
+    "tecnico": "Eduardo Barroca",
+    "sde": {
+      "equipe_id": 373
+    },
+    "id": 1361
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "atleticano",
+    "torcedorNoPlural": "atleticanos",
+    "timeFantasia": false,
+    "nome": "Atlético-MG",
+    "cidade": "Belo Horizonte",
+    "estado": "MG",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/atletico-mg.png",
+    "sigla": "CAM",
+    "idTecnico": 15,
+    "tecnico": "Cuca",
+    "sde": {
+      "equipe_id": 282
+    },
+    "id": 1009
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": null,
+    "torcedorNoPlural": null,
+    "timeFantasia": false,
+    "nome": "Bahia",
+    "cidade": "Salvador",
+    "estado": "BA",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/bahia.png",
+    "sigla": "BAH",
+    "idTecnico": 677,
+    "tecnico": "Dado Cavalcanti",
+    "sde": {
+      "equipe_id": 265
+    },
+    "id": 1250
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": null,
+    "torcedorNoPlural": null,
+    "timeFantasia": false,
+    "nome": "Bragantino",
+    "cidade": "Bragança Paulista",
+    "estado": "SP",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/bragantino.png",
+    "sigla": "BRG",
+    "idTecnico": 1534,
+    "tecnico": "Mauricio Barbieri",
+    "sde": {
+      "equipe_id": 280
+    },
+    "id": 1055
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": null,
+    "torcedorNoPlural": null,
+    "timeFantasia": false,
+    "nome": "Ceará",
+    "cidade": "Fortaleza",
+    "estado": "CE",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/ceara.png",
+    "sigla": "CEA",
+    "idTecnico": 75,
+    "tecnico": "Guto Ferreira",
+    "sde": {
+      "equipe_id": 354
+    },
+    "id": 1297
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "alviverde",
+    "torcedorNoPlural": "alviverdes",
+    "timeFantasia": false,
+    "nome": "Chapecoense",
+    "cidade": "Chapecó",
+    "estado": "SC",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/chapecoense.png",
+    "sigla": "CHA",
+    "idTecnico": 638,
+    "tecnico": "Jair Ventura",
+    "sde": {
+      "equipe_id": 315
+    },
+    "id": 1325
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "corintiano",
+    "torcedorNoPlural": "corinthianos",
+    "timeFantasia": false,
+    "nome": "Corinthians",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/corinthians.png",
+    "sigla": "COR",
+    "idTecnico": 2251,
+    "tecnico": "Sylvinho",
+    "sde": {
+      "equipe_id": 264
+    },
+    "id": 1004
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": null,
+    "torcedorNoPlural": null,
+    "timeFantasia": false,
+    "nome": "Cuiabá",
+    "cidade": "Cuiabá",
+    "estado": "MT",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/cuiaba.png",
+    "sigla": "CUI",
+    "idTecnico": 478,
+    "tecnico": "Jorginho",
+    "sde": {
+      "equipe_id": 1371
+    },
+    "id": 1755
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "flamenguista",
+    "torcedorNoPlural": "flamenguistas",
+    "timeFantasia": false,
+    "nome": "Flamengo",
+    "cidade": "Rio de Janeiro",
+    "estado": "RJ",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/flamengo.png",
+    "sigla": "FLA",
+    "idTecnico": 9,
+    "tecnico": "Renato Portaluppi",
+    "sde": {
+      "equipe_id": 262
+    },
+    "id": 1005
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "tricolor",
+    "torcedorNoPlural": "tricolores",
+    "timeFantasia": false,
+    "nome": "Fluminense",
+    "cidade": "Rio de Janeiro",
+    "estado": "RJ",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/fluminense.png",
+    "sigla": "FLU",
+    "idTecnico": 1574,
+    "tecnico": "Roger Machado",
+    "sde": {
+      "equipe_id": 266
+    },
+    "id": 1006
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": null,
+    "torcedorNoPlural": null,
+    "timeFantasia": false,
+    "nome": "Fortaleza",
+    "cidade": "Fortaleza",
+    "estado": "CE",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/fortaleza.png",
+    "sigla": "FOR",
+    "idTecnico": 2344,
+    "tecnico": "Juan Pablo Vojvoda",
+    "sde": {
+      "equipe_id": 356
+    },
+    "id": 1024
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "gremista",
+    "torcedorNoPlural": "gremistas",
+    "timeFantasia": false,
+    "nome": "Grêmio",
+    "cidade": "Porto Alegre",
+    "estado": "RS",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/gremio.png",
+    "sigla": "GRE",
+    "idTecnico": 3,
+    "tecnico": "Luiz Felipe Scolari",
+    "sde": {
+      "equipe_id": 284
+    },
+    "id": 1083
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "colorado",
+    "torcedorNoPlural": "colorados",
+    "timeFantasia": false,
+    "nome": "Internacional",
+    "cidade": "Porto Alegre",
+    "estado": "RS",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/internacional.png",
+    "sigla": "INT",
+    "idTecnico": 860,
+    "tecnico": "Diego Aguirre",
+    "sde": {
+      "equipe_id": 285
+    },
+    "id": 1018
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": null,
+    "torcedorNoPlural": null,
+    "timeFantasia": false,
+    "nome": "Juventude",
+    "cidade": "Caxias do Sul",
+    "estado": "RS",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/juventude.png",
+    "sigla": "ECJ",
+    "idTecnico": 1057,
+    "tecnico": "Marquinhos Santos",
+    "sde": {
+      "equipe_id": 286
+    },
+    "id": 1019
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "palmeirense",
+    "torcedorNoPlural": "palmeirenses",
+    "timeFantasia": false,
+    "nome": "Palmeiras",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/palmeiras.png",
+    "sigla": "PAL",
+    "idTecnico": 2519,
+    "tecnico": "Abel Ferreira",
+    "sde": {
+      "equipe_id": 275
+    },
+    "id": 1012
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "santista",
+    "torcedorNoPlural": "santistas",
+    "timeFantasia": false,
+    "nome": "Santos",
+    "cidade": "Santos",
+    "estado": "SP",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/santos.png",
+    "sigla": "SAN",
+    "idTecnico": 682,
+    "tecnico": "Fernando Diniz",
+    "sde": {
+      "equipe_id": 277
+    },
+    "id": 1011
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "são paulino",
+    "torcedorNoPlural": "são paulinos",
+    "timeFantasia": false,
+    "nome": "São Paulo",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": true,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/sao-paulo.png",
+    "sigla": "SAO",
+    "idTecnico": 2398,
+    "tecnico": "Hernán Crespo",
+    "sde": {
+      "equipe_id": 276
+    },
+    "id": 1007
+  },
+  {
+    "selecao": false,
+    "torcedorNoSingular": "rubro-negro",
+    "torcedorNoPlural": "rubro-negros",
+    "timeFantasia": false,
+    "nome": "Sport",
+    "cidade": "Recife",
+    "estado": "PE",
+    "pais": "Brasil",
+    "grupo": null,
+    "isTimeGrande": false,
+    "hasScout": true,
+    "urlLogo": "https://frontendapiapp.blob.core.windows.net/images/88x88/sport.png",
+    "sigla": "SPT",
+    "idTecnico": 1888,
+    "tecnico": "Umberto Louzer",
+    "sde": {
+      "equipe_id": 292
+    },
+    "id": 1172
+  }
+]

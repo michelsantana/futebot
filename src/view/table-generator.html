@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Starter Template · Bootstrap v5.0</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/starter-template/">
+
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div class="col-lg-8 mx-auto p-3 py-md-5">
+        <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+            <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+                <span class="fs-4">Gerador de classificação</span>
+            </a>
+        </header>
+
+        <main>
+            <h1>Classificação do Brasileirão serie <span id='serie'>X</span></h1>
+            <p class="fs-5 col-md-8">
+
+            <table id='tabela' class="table table-borderless">
+                <thead>
+                    <tr id='tr-tmpl'>
+                        <th scope="col" data-xname='#'>#</th>
+                        <th scope="col" data-xname='brasao'>Brasão</th>
+                        <th scope="col" data-xname='clube'>Clube</th>
+                        <th scope="col" data-xname='pontos'>Pontos</th>
+                        <th scope="col" data-xname='partidas-jogadas'>PJ</th>
+                        <th scope="col" data-xname='vitorias'>VIT</th>
+                        <th scope="col" data-xname='empates'>E</th>
+                        <th scope="col" data-xname='derrotas'>DER</th>
+                        <th scope="col" data-xname='gols-pro'>GP</th>
+                        <th scope="col" data-xname='gols-contra'>GC</th>
+                        <th scope="col" data-xname='saldo-gols'>SG</th>
+                        <th scope="col" data-xname='ultimas-cinco'>Últimas cinco</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+
+            </table>
+            </p>
+        </main>
+        <div>
+            <hr class="col-3 col-md-2 mb-5">
+
+            <div class="mb-5">
+                <a onclick="Processar()" class="btn btn-primary btn-lg px-4">Processar</a>
+            </div>
+
+            <div class="row g-5">
+                <div class="col-md-6">
+                    <h2>Dados da tabela</h2>
+                    <textarea class="form-control" id="dados" rows="3"></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <h2>Instruções</h2>
+                    <p>Ao colar os dados no campo ao lado, clique em <b>processar</b> para criar uma tabela</p>
+                </div>
+            </div>
+        </div>
+        <footer class="pt-5 my-5 text-muted border-top">
+            Criado por Michel
+        </footer>
+    </div>
+
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(() => {
+            $('')
+        })
+        function Classificacao(objeto) {
+            this.classificacao = objeto.classificacao;
+            this.time = objeto.time;
+            this.sigla = objeto.sigla;
+            this.variacao = objeto.variacao;
+            this.pontos = objeto.pontos;
+            this.jogos = objeto.jogos;
+            this.vitorias = objeto.vitorias;
+            this.empates = objeto.empates;
+            this.derrotas = objeto.derrotas;
+            this.golPro = objeto.golPro;
+            this.golContra = objeto.golContra;
+            this.saldoGols = objeto.saldoGols;
+            this.percentual = objeto.percentual;
+
+            return this;
+        }
+
+        function retornarBrasao(sigla) {
+            return `<img src="../../resources/logos/LOGO_${sigla}.png" />`;
+        }
+
+        function Processar() {
+            var dados = $('#dados').val();
+            dados = JSON.parse(dados);
+            dados.classificacao.forEach(_ => {
+                const cl = new Classificacao(_);
+                const tr = $('#tr-tmpl').clone();
+                //tr.find('[data-xname="#"]').html(cl.posicao);
+                tr.find('[data-xname="#"]').html(cl.posicao);
+                tr.find('[data-xname="brasao"]').html(retornarBrasao(cl.sigla));
+                tr.find('[data-xname="clube"]').html(cl.time);
+                //tr.find('[data-xname="nome"]').html(cl.posicao);
+                tr.find('[data-xname="pontos"]').html(cl.pontos);
+                tr.find('[data-xname="partidas-jogadas"]').html(cl.jogos);
+                tr.find('[data-xname="vitorias"]').html(cl.vitorias);
+                tr.find('[data-xname="empates"]').html(cl.empates);
+                tr.find('[data-xname="derrotas"]').html(cl.derrotas);
+                tr.find('[data-xname="gols-pro"]').html(cl.golPro);
+                tr.find('[data-xname="gols-contra"]').html(cl.golContra);
+                tr.find('[data-xname="saldo-gols"]').html(cl.saldoGols);
+                tr.find('[data-xname="ultimas-cinco"]').html('');
+                tr.removeAttr('scope');
+                $('#tabela tbody').append(tr);
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>

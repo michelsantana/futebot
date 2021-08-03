@@ -3,6 +3,7 @@ const fs = require('fs');
 
 const servicoDados = require('./services/rodada/extrair-json-campeonato');
 const servicoTabela = require('./services/rodada/extrair-tabela-rodada-google');
+const servicoAtributosDoVideo = require('./services/rodada/gerar-atributos-video');
 
 const servicoGerarCard = require('./services/gerar-card');
 const servicoGerarFala = require('./services/gerar-fala');
@@ -13,62 +14,60 @@ const pastas = require('./gerenciador-pastas');
 const utils = require('./utils');
 
 const campeonatosConfig = {
-    SerieA: {
+    A: {
         idDoCampeonato: 767,
-        serie: "A"
+        serie: 'A',
     },
-    SerieB: {
+    B: {
         idDoCampeonato: 769,
-        serie: "B"
-    }
+        serie: 'B',
+    },
 };
 
-(async () => {
+module.exports = async function (serie = 'a', numeroDaRodada = 14, numeroDoVideo = 99) {
+    //(async() => {
+    serie = serie.toUpperCase();
 
-    //const uniqueId = 'x-teste-rodada';
-    const uniqueId = utils.aleatorio(100000, 1000000);
-    const config = campeonatosConfig.SerieB;
-    const numeroDaRodada = 10;
+    let uniqueId = utils.aleatorio(1, 10);
+    uniqueId = `${serie}-SRV-RODADA-${utils.hoje('DDMM')}`;
 
-    const serie = config.serie;
+    const config = campeonatosConfig[serie];
     const idDoCampeonato = config.idDoCampeonato;
 
     const obterArquivoDoWorkflow = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}-${idDoCampeonato}-${numeroDaRodada}_workflow-rodadas.json`;
-    
+
     function Workflow(object) {
-        this.uniqueId = object?.uniqueId;
-        this.idDoCampeonato = object?.idDoCampeonato;
-        this.numeroDaRodada = object?.numeroDaRodada;
+        object = object || {};
+        this.uniqueId = object.uniqueId;
+        this.idDoCampeonato = object.idDoCampeonato;
+        this.numeroDaRodada = object.numeroDaRodada;
 
-        this.arquivoDeDadosProcessado = object?.arquivoDeDadosProcessado;
-        this.arquivoDeDados = object?.arquivoDeDados;
+        this.arquivoDeDadosProcessado = object.arquivoDeDadosProcessado;
+        this.arquivoDeDados = object.arquivoDeDados;
 
-        this.arquivoDaTabelaProcessado = object?.arquivoDaTabelaProcessado;
-        this.arquivoDaTabela = object?.arquivoDaTabela;
+        this.arquivoDaTabelaProcessado = object.arquivoDaTabelaProcessado;
+        this.arquivoDaTabela = object.arquivoDaTabela;
 
-        this.arquivoDoPostProcessado = object?.arquivoDoPostProcessado;
-        this.arquivoDoPost = object?.arquivoDoPost;
+        this.arquivoDoPostProcessado = object.arquivoDoPostProcessado;
+        this.arquivoDoPost = object.arquivoDoPost;
 
-        this.arquivoDoDiscursoProcessado = object?.arquivoDoDiscursoProcessado;
-        this.arquivoDoDiscurso = object?.arquivoDoDiscurso;
+        this.arquivoDoDiscursoProcessado = object.arquivoDoDiscursoProcessado;
+        this.arquivoDoDiscurso = object.arquivoDoDiscurso;
 
-        this.arquivoDeAudioProcessado = object?.arquivoDeAudioProcessado;
-        this.arquivoDeAudio = object?.arquivoDeAudio;
+        this.arquivoDeAudioProcessado = object.arquivoDeAudioProcessado;
+        this.arquivoDeAudio = object.arquivoDeAudio;
 
-        this.arquivoDeVideoProcessado = object?.arquivoDeVideoProcessado;
-        this.arquivoDeVideo = object?.arquivoDeVideo;
+        this.arquivoDeVideoProcessado = object.arquivoDeVideoProcessado;
+        this.arquivoDeVideo = object.arquivoDeVideo;
     }
 
     let workflow = new Workflow();
 
-    if (fs.existsSync(obterArquivoDoWorkflow()))
-        workflow = new Workflow(JSON.parse(fs.readFileSync(obterArquivoDoWorkflow()).toString()));
-    else
-        workflow = new Workflow({ uniqueId: uniqueId });
+    if (fs.existsSync(obterArquivoDoWorkflow())) workflow = new Workflow(JSON.parse(fs.readFileSync(obterArquivoDoWorkflow()).toString()));
+    else workflow = new Workflow({ uniqueId: uniqueId });
 
     const obterArquivoDeDados = async () => {
-
-        if (workflow.arquivoDeDados) return workflow.arquivoDeDados; 
+        if (workflow.arquivoDeDados) return workflow.arquivoDeDados;
 
         const arquivoDosDados = (await servicoDados(uniqueId, idDoCampeonato, serie, numeroDaRodada)).obterArquivoDeDados();
 
@@ -79,10 +78,9 @@ const campeonatosConfig = {
         }
 
         return arquivoDosDados;
-    }
+    };
 
     const obterArquivoDaTabela = async () => {
-
         if (workflow.arquivoDaTabela) return workflow.arquivoDaTabela;
 
         const arquivoDaTabela = (await servicoTabela(uniqueId, serie, numeroDaRodada)).obterArquivoDaTabela();
@@ -94,15 +92,14 @@ const campeonatosConfig = {
         }
 
         return arquivoDaTabela;
-    }
+    };
 
     const obterArquivoDoPost = async (arquivoDaTabela) => {
-
         if (workflow.arquivoDoPostProcessado) return workflow.arquivoDoPost;
 
-        const arquivoDoPost = (await servicoGerarCard(arquivoDaTabela,
-            'Calendário', `Jogos da ${numeroDaRodada}º Rodada - Serie ${serie}`, moment().format('DD/MM/yyyy')))
-            .obterArquivoPostagem();
+        const arquivoDoPost = (
+            await servicoGerarCard(arquivoDaTabela, 'Calendário', `Jogos da ${numeroDaRodada}º Rodada - Serie ${serie}`, moment().format('DD/MM/yyyy'))
+        ).obterArquivoPostagem();
 
         if (arquivoDoPost) {
             workflow.arquivoDoPost = arquivoDoPost;
@@ -111,14 +108,13 @@ const campeonatosConfig = {
         }
 
         return arquivoDoPost;
-    }
+    };
 
     const obterDiscurso = async (dadosJson) => {
-        if (workflow.arquivoDoDiscursoProcessado)
-            return workflow.arquivoDoDiscurso;
+        if (workflow.arquivoDoDiscursoProcessado) return workflow.arquivoDoDiscurso;
 
-        const geradorDiscurso = (await servicoDiscurso(uniqueId));
-        const discurso = (await geradorDiscurso.gerarDiscursoJogosDaSemana(dadosJson));
+        const geradorDiscurso = await servicoDiscurso(uniqueId);
+        const discurso = await geradorDiscurso.gerarDiscursoJogosDaSemana(dadosJson);
         const arquivoDiscurso = discurso.obterArquivoDiscursoJogosDaRodada();
 
         if (arquivoDiscurso) {
@@ -128,13 +124,12 @@ const campeonatosConfig = {
         }
 
         return arquivoDiscurso;
-    }
+    };
 
     const obterAudio = async (textoDiscurso) => {
-        if (workflow.arquivoDeAudioProcessado)
-            return workflow.arquivoDeAudio;
+        if (workflow.arquivoDeAudioProcessado) return workflow.arquivoDeAudio;
 
-        const geradorDeFala = (await servicoGerarFala(uniqueId));
+        const geradorDeFala = await servicoGerarFala(uniqueId);
         const arquivoDeAudio = (await geradorDeFala.gerarArquivoDeAudio(textoDiscurso)).obterArquivoDeAudio();
 
         if (arquivoDeAudio) {
@@ -144,15 +139,14 @@ const campeonatosConfig = {
         }
 
         return arquivoDeAudio;
-    }
+    };
 
     const obterVideo = async (arquivoDoPost, arquivoDeAudio) => {
-        if (workflow.arquivoDeVideoProcessado)
-            return workflow.arquivoDeVideo;
+        if (workflow.arquivoDeVideoProcessado) return workflow.arquivoDeVideo;
 
         const geradorVideo = await servicoGerarVideo(uniqueId);
         const video = (await geradorVideo.gerarVideo(arquivoDoPost, arquivoDeAudio)).obterArquivoVideo();
-        
+
         if (video) {
             workflow.arquivoDeVideo = video;
             workflow.arquivoDeVideo = true;
@@ -160,7 +154,7 @@ const campeonatosConfig = {
         }
 
         return video;
-    }
+    };
 
     const dadosJson = await obterArquivoDeDados();
 
@@ -174,5 +168,7 @@ const campeonatosConfig = {
 
     const video = await obterVideo(arquivoDoPost, arquivoDeAudio);
 
+    servicoAtributosDoVideo(uniqueId).obterTituloDoVideo(numeroDoVideo, numeroDaRodada, serie).obterDescricaoDoVideo(serie, numeroDaRodada);
 
-})();
+    //})();
+};

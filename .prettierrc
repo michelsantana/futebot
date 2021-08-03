@@ -1,0 +1,1 @@
+{ "tabWidth": 4, "useTabs": false, "printWidth": 160, "arrowParens": "always", "bracketSpacing": true, "cursorOffset": -1, "proseWrap": "preserve", "quoteProps": "as-needed", "singleQuote": true }

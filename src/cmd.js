@@ -1,38 +1,32 @@
-const path = require('path');
-const fs = require('fs');
-const pptr = require('puppeteer');
-const pastas = require('./gerenciador-pastas');
-const servicoFala = require('./services/gerar-fala');
-const servicoVideo = require('./services/gerar-video');
-const servicoCard = require('./services/gerar-card');
-const servicoDiscurso = require('./services/gerar-discurso');
-const axios = require('axios').default;
-const servicoJsonCampeonato = require('./services/extrair-json-campeonato');
-const servicoabelaRodada = require('./services/extrair-tabela-rodada-google');
+const gerarVideoClassificacao = require('./gerar-video-classificacao-brasileirao');
+const gerarVideoRodadas = require('./gerar-video-rodadas');
 
-// Arquivo que uso para debuggar os passos quando necessário.
-// Remover após criação dos testes automatizados
 
 (async () => {
+    "use strict";
 
-    // console.log(await servicoFala.GerarTexto('./archive/20210619/classificacao.json'));
-    // console.log(await servicoCard.Executar({
-    //     cabecalho: './archive/20210619/header.png',
-    //     corpo1: './archive/20210619/corpo1.png',
-    //     corpo2: './archive/20210619/corpo2.png',
-    //     rodape: './archive/20210619/rodape.png'
-    // }));
-    //console.log(await servicoFala.EsperarfinalizacaoDownload());
-    //await servicoVideo.Executar(`./archive/20210619/post.png`, `./archive/20210619/IBM_AUDIO_20210619.mp3`);
+    console.log(process.argv);
+    const params = {};
+    process.argv.forEach(_ => _.indexOf('=') > -1 ? params[_.split('=')[0]] = _.split('=')[1] : undefined);
+    // cmd = [c, r] classficação ou rodada
+    // sr = [a, b] letra da serie
+    // rd = [1, 99] numero da rodada
+    // nrv = [0, 99] numero do video
 
-    // const { arquivoGerado } = await servicoJsonCampeonato.Executar(767);
-    // const result = await servicoDiscurso.GerarDiscursoJogosDaSemana(arquivoGerado);
-    // const fala = await servicoFala.Executar(result.arquivoGerado);
+    const { cmd, sr, rd, nrv = 99 } = params;
+    const condicoes = [];
+    if(!cmd || !sr) {
+        console.error('Faltou parametros');
+        return;
+    }
+    if (cmd == 'r' && !rd) {
+        console.error('Rodada sem número');
+        return;
+    }
+    switch(cmd){
+        case 'c': await gerarVideoClassificacao(sr, nrv, 'aa'); break;
+        case 'r': await gerarVideoRodadas(sr,rd, nrv); break;
+    }
 
-    //await servicoabelaRodada.Executar();
-
-    //console.log(path.('D:/Notebook - Documentos/Workspace/pessoal/futebot/archive/20210625/discurso-classificacao-serie-a.txt'));
-
-    await servicoVideo.Executar('./archive/20210627/post.png','./archive/20210627/IBM_AUDIO.mp3');
-
+ 
 })();

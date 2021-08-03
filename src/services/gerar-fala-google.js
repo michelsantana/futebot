@@ -83,25 +83,31 @@
 
 //         await page.evaluate((nomeDoArquivoDownload) => {
 
-//             var audio = document.querySelector('audio');
-//             audio.onplay = function () {
+//             const audioBase = Audio;
+//             Audio = function (a, b, c, d, e, f) {
+//                 console.log(a, b, c, d, e, f);
+//                 const audio = new audioBase(a, b, c, d, e, f);
 
-//                 let link = document.createElement('a');
-//                 link.innerHTML = 'IndicadorDeInicialização';
-//                 link.setAttribute(`href`, audio.src);
-//                 link.setAttribute(`download`, nomeDoArquivoDownload);
-//                 link.setAttribute('id', 'dwl');
-//                 link.setAttribute('style', `position:absolute;top:50px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
-//                 document.body.append(link);
-//             }
+//                 audio.onplay = function () {
+//                     let link = document.createElement('a');
+//                     link.innerHTML = 'IndicadorDeInicialização';
+//                     link.setAttribute(`href`, audio.src);
+//                     link.setAttribute(`download`, nomeDoArquivoDownload);
+//                     link.setAttribute('id', 'dwl');
+//                     link.setAttribute('style', `position:absolute;top:50px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
+//                     document.body.append(link);
+//                 }
 
-//             audio.onended = function () {
-//                 let link = document.createElement('a');
-//                 link.innerHTML = 'IndicadorDeFinalização';
-//                 link.setAttribute(`href`, '#');
-//                 link.setAttribute('id', 'dwlend');
-//                 link.setAttribute('style', `position:absolute;top:100px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
-//                 document.body.append(link);
+//                 audio.onended = function () {
+//                     let link = document.createElement('a');
+//                     link.innerHTML = 'IndicadorDeFinalização';
+//                     link.setAttribute(`href`, '#');
+//                     link.setAttribute('id', 'dwlend');
+//                     link.setAttribute('style', `position:absolute;top:100px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
+//                     document.body.append(link);
+//                 }
+
+//                 return audio;
 //             }
 
 //         }, this.obterNomeArquivoAudio());
@@ -122,22 +128,4 @@
 //     }
 
 //     return this;
-// }
-
-// const audioBase = Audio;
-// Audio = function (a,b,c,d,e,f){
-//     console.log(a,b,c,d,e,f);
-
-//     const audio = new audioBase(a,b,c,d,e,f);
-//     debugger;
-//     audio.onplay = function () {
-//         let link = document.createElement('a');
-//         link.innerHTML = 'IndicadorDeInicialização';
-//         link.setAttribute(`href`, __aa.src);
-//         link.setAttribute(`download`, 'filename');
-//         link.setAttribute('id', 'dwl');
-//         link.setAttribute('style', `position:absolute;top:50px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
-//         document.body.append(link);
-//     }
-//     return audio;
 // }

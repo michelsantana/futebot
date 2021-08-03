@@ -66,8 +66,7 @@ module.exports = async function (uniqueId, idDoCampeonato, serie, numeroDaRodada
         return partidasDaRodada;
     }
 
-
-    utils.criarPastaSeNaoExistir(this.obterPastaCampeonato(idDoCampeonato));
+    utils.criarPastaSeNaoExistir(this.obterPastaCampeonato());
 
     const equipes = await ObterDadosDasEquipes();
     const partidas = await ObterDadosDasPartidas();
