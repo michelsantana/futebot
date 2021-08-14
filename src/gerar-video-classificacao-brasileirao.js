@@ -22,7 +22,7 @@ module.exports = async function (serie = 'a', numeroDoVideo = 99, uid='') {
 
     let uniqueId = `${uid}${serie}-SRV-CLASS-${utils.hoje('DDMM')}`;
 
-    const obterArquivoDoWorkflow = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}workflow-brasileirao.json`;
+    const obterArquivoDoWorkflow = () => `${pastas.obterPastaArquivosDoDia()}/${uniqueId}_workflow-brasileirao.json`;
 
     function Workflow(object) {
         object = object || {};
@@ -114,19 +114,21 @@ module.exports = async function (serie = 'a', numeroDoVideo = 99, uid='') {
         return arquivoDoDiscurso;
     };
 
-    const obterAudio = async (textoDiscurso) => {
+    const obterAudio = async (arquivoDoDiscurso) => {
         if (workflow.arquivoDeAudioProcessado) return workflow.arquivoDeAudio;
 
-        const geradorDeFala = await servicoGerarFala(uniqueId);
-        const arquivoDeAudio = (await geradorDeFala.gerarArquivoDeAudio(textoDiscurso)).obterArquivoDeAudio();
+        const geradorDeFala = await servicoGerarFala(uniqueId)
+            .SalvarEm(pastas.obterPastaArquivosDoDia(), `${uniqueId}_IBMAUDIO`)
+            .DefinirDiscurso(fs.readFileSync(arquivoDoDiscurso).toString())
+            .ExecutarRobo();
 
-        if (arquivoDeAudio) {
-            workflow.arquivoDeAudio = arquivoDeAudio;
+        if (geradorDeFala.obterArquivoDestino()) {
+            workflow.arquivoDeAudio = geradorDeFala.obterArquivoDestino();
             workflow.arquivoDeAudioProcessado = true;
             fs.writeFileSync(obterArquivoDoWorkflow(), JSON.stringify(workflow));
         }
 
-        return arquivoDeAudio;
+        return geradorDeFala.obterArquivoDestino();
     };
 
     const obterVideo = async (arquivoDoPost, arquivoDeAudio) => {

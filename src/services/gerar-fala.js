@@ -1,53 +1,33 @@
-const path = require('path');
 const fs = require('fs');
 const pptr = require('puppeteer');
-const moment = require('moment');
 const utils = require('./../utils');
 const pastas = require('./../gerenciador-pastas');
 
-module.exports = async function (uniqueId) {
-    this.obterNomeArquivoAudioSemExtensao = () => `${uniqueId}_IBM_AUDIO`;
-    this.obterNomeArquivoAudio = () => `${this.obterNomeArquivoAudioSemExtensao()}.mp3`;
-    this.obterArquivoDeAudio = () => `${pastas.obterPastaArquivosDoDia()}/${this.obterNomeArquivoAudio()}`;
-    this.obterArquivoDeAudioBaixado = () => `${pastas.obterPastaDownloadsChrome()}/${this.obterNomeArquivoAudio()}`;
-    this.obterPastaDeDownloads = () => pastas.obterPastaDownloadsChrome();
+module.exports = function (uniqueId) {
+    var pastaArquivo = pastas.obterPastaArquivos();
+    var nomeDoArquivo = `${uniqueId}.mp3`;
 
-    this.gerarArquivoDeAudio = async (arquivoDoDiscurso) => {
-        const EsperarfinalizacaoDownload = async () => {
-            await utils.sleep(1);
-            const quantidadeTentativasMaxima = 10;
-            let result = false;
-            let tentativaAtual = 1;
-            while (tentativaAtual++ < quantidadeTentativasMaxima) {
-                let arquivos = fs.readdirSync(this.obterPastaDeDownloads());
+    this.obterArquivoDestino = () => `${pastaArquivo}/${nomeDoArquivo}`;
+    this.obterArquivoPastaDownloads = () => `${pastas.obterPastaDownloadsChrome()}/${nomeDoArquivo}`;
 
-                try {
-                    for (var a of arquivos) {
-                        if (a == this.obterNomeArquivoAudio()) {
-                            tentativaAtual = 99;
-                            result = true;
-                            fs.copyFileSync(`${this.obterArquivoDeAudioBaixado()}`, `${this.obterArquivoDeAudio()}`);
-                            break;
-                        }
-                    }
-                } catch (e) {
-                    console.log(e, tentativaAtual);
-                }
-                if (result) break;
-                await utils.sleep(tentativaAtual);
-            }
+    var textoDiscurso = '';
 
-            return result;
-        };
+    this.SalvarEm = (pasta, arquivo) => {
+        utils.criarPastaSeNaoExistir(pasta);
+        pastaArquivo = pasta;
+        nomeDoArquivo = `${arquivo}.mp3`;
+        return this;
+    };
 
-        if (fs.existsSync(this.obterArquivoDeAudio())) return this;
+    this.DefinirDiscurso = (texto) => {
+        textoDiscurso = texto;
+        return this;
+    };
 
-        if (fs.existsSync(this.obterArquivoDeAudioBaixado())) {
-            await EsperarfinalizacaoDownload();
-            return this;
-        }
-
-        const scriptFala = fs.readFileSync(arquivoDoDiscurso).toString();
+    this.ExecutarRobo = async () => {
+        var intervaloFinalizacaoDownload = null;
+        var tempoMaximoIntervaloFinalizacaoDownload = 20;
+        var contadorIntervaloFinalizacaoDownload = 0;
 
         const browser = await pptr.launch({
             headless: false,
@@ -64,14 +44,14 @@ module.exports = async function (uniqueId) {
 
         await page.evaluate(() => (document.querySelector('#text-area').value = ''));
 
-        await page.type('#text-area', scriptFala);
+        await page.type('#text-area', textoDiscurso);
         await page.waitForTimeout(720);
 
         await page.click('#slider');
         await page.waitForTimeout(720);
+
         await page.keyboard.press('ArrowLeft');
         await page.waitForTimeout(720);
-        //await page.keyboard.press('ArrowLeft');
 
         await page.click('#downshift-3-toggle-button');
         await page.waitForTimeout(720);
@@ -79,6 +59,7 @@ module.exports = async function (uniqueId) {
         await page.evaluate((nomeDoArquivoDownload) => {
             let endlink = document.createElement('button');
             endlink.innerHTML = 'FinalizarForçado';
+            endlink.setAttribute('class', 'dwlend');
             endlink.setAttribute('onclick', 'this.id="dwlend"');
             endlink.setAttribute('style', `position:absolute;top:150px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
             document.body.append(endlink);
@@ -102,7 +83,7 @@ module.exports = async function (uniqueId) {
                 link.setAttribute('style', `position:absolute;top:100px;left:0;z-index:99999999999999;font-size:50px;background:#000;width:100%;`);
                 document.body.append(link);
             };
-        }, this.obterNomeArquivoAudio());
+        }, nomeDoArquivo);
 
         await page.click('.play-btn.bx--btn');
         await page.waitForSelector('audio[src]');
@@ -110,9 +91,25 @@ module.exports = async function (uniqueId) {
         await page.waitForSelector('#dwl', { timeout: 60000 });
         await page.click('#dwl');
 
+        const EsperarfinalizacaoDownload = () => {
+            return setTimeout(() => {
+                if (fs.existsSync(obterArquivoPastaDownloads())) {
+                    clearTimeout(intervaloFinalizacaoDownload);
+                    page.evaluate(() => {
+                        document.querySelector('.dwlend').id = 'dwlend';
+                    });
+                } else {
+                    if (contadorIntervaloFinalizacaoDownload < tempoMaximoIntervaloFinalizacaoDownload)
+                        intervaloFinalizacaoDownload = EsperarfinalizacaoDownload();
+                    contadorIntervaloFinalizacaoDownload++;
+                }
+            }, 3000);
+        };
+        intervaloFinalizacaoDownload = EsperarfinalizacaoDownload();
+
         await page.waitForSelector('#dwlend', { timeout: 60000 * 5 }); // espera até 5 minutos
 
-        await EsperarfinalizacaoDownload();
+        fs.copyFileSync(obterArquivoPastaDownloads(), obterArquivoDestino());
 
         await page.close();
         await browser.close();
