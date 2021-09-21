@@ -26,7 +26,7 @@ module.exports = function (uniqueId) {
 
     this.ExecutarRobo = async () => {
         var intervaloFinalizacaoDownload = null;
-        var tempoMaximoIntervaloFinalizacaoDownload = 20;
+        var tempoMaximoIntervaloFinalizacaoDownload = 100;
         var contadorIntervaloFinalizacaoDownload = 0;
 
         const browser = await pptr.launch({
@@ -91,23 +91,26 @@ module.exports = function (uniqueId) {
         await page.waitForSelector('#dwl', { timeout: 60000 });
         await page.click('#dwl');
 
-        const EsperarfinalizacaoDownload = () => {
-            return setTimeout(() => {
-                if (fs.existsSync(obterArquivoPastaDownloads())) {
-                    clearTimeout(intervaloFinalizacaoDownload);
-                    page.evaluate(() => {
-                        document.querySelector('.dwlend').id = 'dwlend';
-                    });
-                } else {
-                    if (contadorIntervaloFinalizacaoDownload < tempoMaximoIntervaloFinalizacaoDownload)
+        try {
+            const EsperarfinalizacaoDownload = () => {
+                return setTimeout(() => {
+                    if (fs.existsSync(obterArquivoPastaDownloads())) {
+                        page.evaluate(() => {
+                            document.querySelector('.dwlend').id = 'dwlend';
+                        });
+                    } else {
                         intervaloFinalizacaoDownload = EsperarfinalizacaoDownload();
-                    contadorIntervaloFinalizacaoDownload++;
-                }
-            }, 3000);
-        };
-        intervaloFinalizacaoDownload = EsperarfinalizacaoDownload();
+                    }
+                }, 3000);
+            };
+            intervaloFinalizacaoDownload = EsperarfinalizacaoDownload();
 
-        await page.waitForSelector('#dwlend', { timeout: 60000 * 5 }); // espera até 5 minutos
+            await page.waitForSelector('#dwlend', { timeout: 60000 * 5 }); // espera até 5 minutos
+            clearTimeout(intervaloFinalizacaoDownload);
+        } catch (ex) {
+            clearTimeout(intervaloFinalizacaoDownload);
+            throw ex;
+        }
 
         fs.copyFileSync(obterArquivoPastaDownloads(), obterArquivoDestino());
 

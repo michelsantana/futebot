@@ -5,9 +5,10 @@ const axios = require('axios').default;
 const $c = require('cheerio');
 const fs = require('fs');
 
-(async (rd = 18, time1 = 'red', time2 = 'gre') => {
-    const fases = [1];
-    var url = 'https://ge.globo.com/futebol/brasileirao-serie-a/playlist/veja-lances-e-gols-da-14-rodada-do-brasileirao-2021.ghtml';
+(async () => {
+    var rd = 18, time1 = 'red', time2 = 'gre', index = 1;
+    //var url = 'https://ge.globo.com/futebol/brasileirao-serie-a/playlist/veja-lances-e-gols-da-14-rodada-do-brasileirao-2021.ghtml';
+    var url = 'https://ge.globo.com/playlist/assista-aos-nossos-principais-videos.ghtml';
 
     var browser = await pptr.launch({
         executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -15,7 +16,7 @@ const fs = require('fs');
         defaultViewport: null,
         devtools: true,
         //args: ['--window-size=1920,1170','--window-position=0,0']
-        args: ['--incognito', '--window-size=1920,1080', '--window-position=720,50'],
+        args: ['--window-size=1920,1080', '--window-position=520,50'],
     });
 
     var page = await browser.newPage();
@@ -40,36 +41,40 @@ const fs = require('fs');
 
     await page.waitForSelector('video[id]', { timeout: 2 * 60 * 1000 });
 
-    const videoId = await page.evaluate(
-        (time1, time2) => {
-            function removeAcento(text) {
-                text = text.toLowerCase();
-                text = text.replace(new RegExp('[ÁÀÂÃ]', 'gi'), 'a');
-                text = text.replace(new RegExp('[ÉÈÊ]', 'gi'), 'e');
-                text = text.replace(new RegExp('[ÍÌÎ]', 'gi'), 'i');
-                text = text.replace(new RegExp('[ÓÒÔÕ]', 'gi'), 'o');
-                text = text.replace(new RegExp('[ÚÙÛ]', 'gi'), 'u');
-                text = text.replace(new RegExp('[Ç]', 'gi'), 'c');
-                return text;
-            }
-            var contains = (t, f) => {
-                t = removeAcento(t).toLowerCase();
-                f = removeAcento(f).toLowerCase();
-                return [t.indexOf(f) > -1, t.indexOf(f.substr(4))].some((_) => _);
-            };
-            var link = Array.from(document.querySelectorAll(`[data-video-title]`)).map((_) => {
-                var title = _.attributes['data-video-title'].value;
-                if ((contains(title, time1), contains(title, time2)))
-                    return {
-                        title: title,
-                        sel: _.attributes['data-video-source'].value,
-                    };
-            });
-            return link.filter((_) => !!_)[0].sel;
-        },
-        time1,
-        time2
-    );
+    // const videoId = await page.evaluate(
+    //     (time1, time2) => {
+    //         function removeAcento(text) {
+    //             text = text.toLowerCase();
+    //             text = text.replace(new RegExp('[ÁÀÂÃ]', 'gi'), 'a');
+    //             text = text.replace(new RegExp('[ÉÈÊ]', 'gi'), 'e');
+    //             text = text.replace(new RegExp('[ÍÌÎ]', 'gi'), 'i');
+    //             text = text.replace(new RegExp('[ÓÒÔÕ]', 'gi'), 'o');
+    //             text = text.replace(new RegExp('[ÚÙÛ]', 'gi'), 'u');
+    //             text = text.replace(new RegExp('[Ç]', 'gi'), 'c');
+    //             return text;
+    //         }
+    //         var contains = (t, f) => {
+    //             t = removeAcento(t).toLowerCase();
+    //             f = removeAcento(f).toLowerCase();
+    //             return [t.indexOf(f) > -1, t.indexOf(f.substr(4))].some((_) => _);
+    //         };
+    //         var link = Array.from(document.querySelectorAll(`[data-video-title]`)).map((_) => {
+    //             var title = _.attributes['data-video-title'].value;
+    //             if ((contains(title, time1), contains(title, time2)))
+    //                 return {
+    //                     title: title,
+    //                     sel: _.attributes['data-video-source'].value,
+    //                 };
+    //         });
+    //         return link.filter((_) => !!_)[0].sel;
+    //     },
+    //     time1,
+    //     time2
+    // );
+
+    const videoId = await page.evaluate((index)=>{
+        return document.querySelector(`[data-video-source]:nth-child(${index})`).attributes['data-video-source'].value;
+    }, index)
 
     await page.click('[data-video-title]:nth-child(1)');
     await page.waitForTimeout(2500);
