@@ -24,7 +24,7 @@ const gerarVideoRodadas = require('./gerar-video-rodadas');
         return;
     }
     switch(cmd){
-        case 'c': await gerarVideoClassificacao(sr, nrv, 'aa'); break;
+        case 'c': await gerarVideoClassificacao(sr, nrv); break;
         case 'r': await gerarVideoRodadas(sr,rd, nrv); break;
     }
 

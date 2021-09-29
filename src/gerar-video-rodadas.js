@@ -127,18 +127,33 @@ module.exports = async function (serie = 'a', numeroDaRodada = 14, numeroDoVideo
     };
 
     const obterAudio = async (textoDiscurso) => {
+        // if (workflow.arquivoDeAudioProcessado) return workflow.arquivoDeAudio;
+
+        // const geradorDeFala = await servicoGerarFala(uniqueId);
+        // const arquivoDeAudio = (await geradorDeFala.gerarArquivoDeAudio(textoDiscurso)).obterArquivoDeAudio();
+
+        // if (arquivoDeAudio) {
+        //     workflow.arquivoDeAudio = arquivoDeAudio;
+        //     workflow.arquivoDeAudioProcessado = true;
+        //     fs.writeFileSync(obterArquivoDoWorkflow(), JSON.stringify(workflow));
+        // }
+
+        // return arquivoDeAudio;
+
         if (workflow.arquivoDeAudioProcessado) return workflow.arquivoDeAudio;
 
-        const geradorDeFala = await servicoGerarFala(uniqueId);
-        const arquivoDeAudio = (await geradorDeFala.gerarArquivoDeAudio(textoDiscurso)).obterArquivoDeAudio();
+        const geradorDeFala = await servicoGerarFala(uniqueId)
+            .SalvarEm(pastas.obterPastaArquivosDoDia(), `${uniqueId}_IBMAUDIO_RODADA`)
+            .DefinirDiscurso(fs.readFileSync(arquivoDoDiscurso).toString())
+            .ExecutarRobo();
 
-        if (arquivoDeAudio) {
-            workflow.arquivoDeAudio = arquivoDeAudio;
+        if (geradorDeFala.obterArquivoDestino()) {
+            workflow.arquivoDeAudio = geradorDeFala.obterArquivoDestino();
             workflow.arquivoDeAudioProcessado = true;
             fs.writeFileSync(obterArquivoDoWorkflow(), JSON.stringify(workflow));
         }
 
-        return arquivoDeAudio;
+        return geradorDeFala.obterArquivoDestino();
     };
 
     const obterVideo = async (arquivoDoPost, arquivoDeAudio) => {
