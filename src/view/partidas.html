@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Starter Template · Bootstrap v5.0</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/starter-template/">
+    <link rel="stylesheet" href="../../node_modules/tailwindcss/dist/tailwind.min.css">
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        @font-face {
+            font-family: "sport";
+            src: url("JandaManateeSolid.ttf");
+        }
+
+        @font-face {
+            font-family: "score";
+            src: url("SCOREBOARD.ttf");
+        }
+
+        .fs-sport {
+            font-family: 'sport' !important;
+        }
+
+        .fs-score {
+            font-family: 'score' !important;
+        }
+
+        .score .fs-score {
+            font-size: 280px !important;
+        }
+
+        .score >.x {
+            font-size: 90px !important;
+        }
+
+        .h {
+            font-size: 120px;
+        }
+
+        .f{
+            font-size: 80px;
+        }
+
+        .name-l,
+        .name-r {
+            font-size: 112px;
+        }
+
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-6 mt-5">
+
+
+                <div class="card text-center" style="width: 1920px; height: 720px">
+                    <div class="card-header h fs-sport">
+                        Brasileirão Série A
+                    </div>
+                    <div class="card-body"
+                        style="background: url('./bg.png'); background-size: cover; background-position: 0 -100px;">
+                        <div class="d-flex justify-content-around align-items-stretch" style="height: 100%;">
+                            <div class="d-flex justify-content-between align-items-center fs-sport">
+                                <div class="logo-l">
+                                    <img src="img/_PAL.png" width="640px" />
+                                    <div class="name-l">
+                                        PAL
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="score d-flex justify-content-between align-items-center">
+                                <div class="fs-score fs-2">1</div>
+                                <div class="x">x</div>
+                                <div class="fs-score fs-2">2</div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center fs-sport">
+                                <div class="logo-r">
+                                    <img src="img/_PAL.png" width="640px" />
+                                    <div class="name-r">
+                                        PAL
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted fs-sport f">
+                        Allianz Park - 28/09/2021 - 21:00
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

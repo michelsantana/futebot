@@ -10,7 +10,7 @@
     <title>Starter Template · Bootstrap v5.0</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/starter-template/">
-
+    <link rel="stylesheet" href="../../node_modules/tailwindcss/dist/tailwind.min.css">
 
 
     <!-- Bootstrap core CSS -->
@@ -106,6 +106,7 @@
         $(() => {
             $('')
         })
+        
         function Classificacao(objeto) {
             this.classificacao = objeto.classificacao;
             this.time = objeto.time;
@@ -116,9 +117,9 @@
             this.vitorias = objeto.vitorias;
             this.empates = objeto.empates;
             this.derrotas = objeto.derrotas;
-            this.golPro = objeto.golPro;
-            this.golContra = objeto.golContra;
-            this.saldoGols = objeto.saldoGols;
+            this.golsPro = objeto.golsPro;
+            this.golsContra = objeto.golsContra;
+            this.saldoDeGols = objeto.saldoDeGols;
             this.percentual = objeto.percentual;
 
             return this;
@@ -131,7 +132,7 @@
         function Processar() {
             var dados = $('#dados').val();
             dados = JSON.parse(dados);
-            dados.classificacao.forEach(_ => {
+            dados.data.forEach(_ => {
                 const cl = new Classificacao(_);
                 const tr = $('#tr-tmpl').clone();
                 //tr.find('[data-xname="#"]').html(cl.posicao);
@@ -144,9 +145,9 @@
                 tr.find('[data-xname="vitorias"]').html(cl.vitorias);
                 tr.find('[data-xname="empates"]').html(cl.empates);
                 tr.find('[data-xname="derrotas"]').html(cl.derrotas);
-                tr.find('[data-xname="gols-pro"]').html(cl.golPro);
-                tr.find('[data-xname="gols-contra"]').html(cl.golContra);
-                tr.find('[data-xname="saldo-gols"]').html(cl.saldoGols);
+                tr.find('[data-xname="gols-pro"]').html(cl.golsPro);
+                tr.find('[data-xname="gols-contra"]').html(cl.golsContra);
+                tr.find('[data-xname="saldo-gols"]').html(cl.saldoDeGols);
                 tr.find('[data-xname="ultimas-cinco"]').html('');
                 tr.removeAttr('scope');
                 $('#tabela tbody').append(tr);

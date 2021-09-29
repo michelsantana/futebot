@@ -4,6 +4,7 @@
     "main": "index.js",
     "license": "MIT",
     "scripts": {
+        "integration": "node ./src/integration",
         "g": "node ./src/cmd",
         "g:class": "node ./src/gerar-video-classificacao-brasileirao",
         "g:part": "node ./src/gerar-video-rodadas",
@@ -36,6 +37,7 @@
         "puppeteer": "^10.0.0",
         "replace-color": "^2.3.0",
         "sqlite3": "^5.0.0",
+        "tailwindcss": "^2.2.16",
         "text-to-speech-js": "^1.1.10",
         "videoshow": "^0.1.12"
     }

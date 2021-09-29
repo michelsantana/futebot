@@ -9,11 +9,11 @@ module.exports = function (uniqueId) {
     
     fs.writeFileSync(this.obterArquivoAtributos(), '');
     
-    this.obterTituloDoVideo = (numeroDoVideo, serie) => {
+    this.obterTituloDoVideo = (serie) => {
         // CLASSIFICAÇÃO #14 - SERIE B - 06/07/2021 - BRASILEIRÃO EM 2021 BRASILEIRÃO ATUALIZADO HOJE
         // CLASSIFICAÇÃO 14/07/2021 SERIE B - BRASILEIRÃO 2021 HOJE - ATUALIZADO #17
         //fs.appendFileSync(this.obterArquivoAtributos(), `[TITULO]\n#${numeroDoVideo} - BRASILEIRÃO ${ano} CLASSIFICAÇÃO HOJE - BRASILEIRÃO ${moment().format('DD/MM/yyyy')} - ATUALIZADO`);
-        fs.appendFileSync(this.obterArquivoAtributos(), `[TITULO]\nCLASSIFICAÇÃO ${moment().format('DD/MM/yyyy')} SÉRIE ${serie} - BRASILEIRÃO ${ano} CLASSIFICAÇÃO HOJE - ATUALIZADO #${numeroDoVideo}`);
+        fs.appendFileSync(this.obterArquivoAtributos(), `[TITULO]\nCLASSIFICAÇÃO ${moment().format('DD/MM/yyyy')} SÉRIE ${serie} - BRASILEIRÃO ${ano} CLASSIFICAÇÃO HOJE`);
         return this;
     }
 
