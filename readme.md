@@ -1,21 +1,10 @@
 <!-- ![alt text](https://github.com/michelsantana/futbot/blob/[branch]/image.jpg?raw=true) -->
+# ⚠🚨🛑 Obsoleto 🛑🚨⚠<br>
+Esse repo foi descontinuado e sua versão atualizada é o [futebox](https://github.com/michelsantana/futebox/)
 
-# FuteBOT
+# FuteBOT 
 
-## Um gerador de vídeos sobre a classificação do brasileirão para o canal Futbox no youtube https://www.youtube.com/channel/UCWs2h6plWKR8xCZM3ljNGRw
-
-### Como usar
-Ao clonar o projeto, configurar um arquivo .env com as seguintes informações:
-
- chave                               | descrição                                                                                                                    
-------------------------------------- | -----------------------------------------------------------------------------------------------------------------------------
- caminhoPastaDownloadPadraoChromium  | Colocar o caminho da pasta onde o chromium baixa os arquivos por padrão. No meu caso foi em "C:/Users/[username]/Downloads/" 
- caminhoPastaSaidaDosArquivos        | Caminho da onde os arquivos gerados serão salvos, por padrão serão gerados em ./archive
-
-O bot 
-
-🚧  Em construção...  🚧
-
+## Um gerador de vídeos sobre a classificação do brasileirão para o canal Futebox no youtube https://www.youtube.com/channel/UCWs2h6plWKR8xCZM3ljNGRw
 
 ### Features
 
